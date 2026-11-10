@@ -61,5 +61,5 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 |---|---|---|---|
 | asyncua | 2.1.0 | LGPL-3.0+ | OPC UA server and client (FreeOpcUa) |
 | basyx-python-sdk | 2.2.0 | MIT | AAS metamodel V3, AASX/JSON (Eclipse BaSyx) |
-| aas-test-engines | 1.0.3 | MIT | Official IDTA compliance checker for AAS files |
+| aas-test-engines | 1.0.3 | Apache-2.0 (github.com/admin-shell-io/aas-test-engines) | Official IDTA compliance checker for AAS files |
 | pip-audit | latest | Apache-2.0 | Known-vulnerability scan of the dependency tree: no findings on 10 Nov 2026 |

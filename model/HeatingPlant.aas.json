@@ -1,0 +1,3479 @@
+{
+  "assetAdministrationShells": [
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/aas/HeatingPlant-0001",
+      "idShort": "HeatingPlant",
+      "modelType": "AssetAdministrationShell",
+      "assetInformation": {
+        "assetKind": "Instance",
+        "globalAssetId": "https://github.com/sulemanali5760/heating-plant-aas/asset/HeatingPlant-0001"
+      },
+      "submodels": [
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://github.com/sulemanali5760/heating-plant-aas/sm/Nameplate"
+            }
+          ]
+        },
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://github.com/sulemanali5760/heating-plant-aas/sm/TechnicalData"
+            }
+          ]
+        },
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://github.com/sulemanali5760/heating-plant-aas/sm/AssetInterfacesDescription"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "submodels": [
+    {
+      "idShort": "Nameplate",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://admin-shell.io/idta/nameplate/3/0/Nameplate"
+          }
+        ]
+      },
+      "description": [
+        {
+          "language": "en",
+          "text": "Contains the nameplate information attached to the product"
+        }
+      ],
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/sm/Nameplate",
+      "kind": "Instance",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "idShort": "URIOfTheProduct",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABN590#002"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-ABH173#003"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:anyURI",
+          "value": "https://github.com/sulemanali5760/heating-plant-aas",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "ManufacturerName",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA565#009"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAO677#004"
+                }
+              ]
+            }
+          ],
+          "value": [
+            {
+              "language": "en",
+              "text": "Suleman Ali (portfolio project, not a commercial product)"
+            }
+          ],
+          "modelType": "MultiLanguageProperty"
+        },
+        {
+          "idShort": "ManufacturerProductDesignation",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA567#009"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAW338#003"
+                }
+              ]
+            }
+          ],
+          "value": [
+            {
+              "language": "en",
+              "text": "Heating plant twin, weather-compensated flow temperature control TIC101"
+            },
+            {
+              "language": "de",
+              "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101"
+            }
+          ],
+          "modelType": "MultiLanguageProperty"
+        },
+        {
+          "idShort": "AddressInformation",
+          "description": [
+            {
+              "language": "en",
+              "text": "Note: this set of information is defined by SMT drop-in \"Address Information\""
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/zvei/nameplate/1/0/ContactInformations/AddressInformation"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://admin-shell.io/smt-dropin/smt-dropin-use/1/0"
+                }
+              ]
+            },
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0112/2///61360_7#AAS002#001"
+                }
+              ]
+            },
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAQ837#008/0173-1#01-ADR448#008"
+                }
+              ]
+            }
+          ],
+          "modelType": "SubmodelElementCollection",
+          "value": [
+            {
+              "idShort": "CityTown",
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAO132#002"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "language": "de",
+                  "text": "Magdeburg"
+                },
+                {
+                  "language": "en",
+                  "text": "Magdeburg"
+                }
+              ],
+              "modelType": "MultiLanguageProperty"
+            },
+            {
+              "idShort": "NationalCode",
+              "description": [
+                {
+                  "language": "en",
+                  "text": " Note: country codes defined accord. to ISO 3166-1. Recommendation: property declaration as MLP is required by its semantic definition. As the property value is language independent, users are recommended to provide maximal 1 string in any language of the user’s choice."
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAO134#002"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "language": "en",
+                  "text": "DE"
+                }
+              ],
+              "modelType": "MultiLanguageProperty"
+            }
+          ]
+        },
+        {
+          "idShort": "OrderCodeOfManufacturer",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA950#008"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAO227#004"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:string",
+          "value": "not orderable (demonstrator)",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "SerialNumber",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA951#009"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAM556#004"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:string",
+          "value": "0001",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "YearOfConstruction",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABP000#002"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAP906#003"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:string",
+          "value": "2026",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "SoftwareVersion",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA601#008"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAM737#004"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:string",
+          "value": "1.0.0",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "CountryOfOrigin",
+          "description": [
+            {
+              "language": "en",
+              "text": "Note: Country codes defined accord. to DIN EN ISO 3166-1 alpha-2 codes"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABP462#001"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "0173-1#02-AAO259#007"
+                }
+              ]
+            }
+          ],
+          "valueType": "xs:string",
+          "value": "DE",
+          "modelType": "Property"
+        }
+      ],
+      "administration": {
+        "version": "3",
+        "revision": "0"
+      }
+    },
+    {
+      "idShort": "TechnicalData",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "0173-1#01-AHX837#002"
+          }
+        ]
+      },
+      "description": [
+        {
+          "language": "en",
+          "text": "Submodel containing technical data of the asset and associated product classificatons"
+        },
+        {
+          "language": "de",
+          "text": "Teilmodell, das die technischen Daten des Assets und die zugehörigen Produktklassifizierungen enthält"
+        }
+      ],
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/sm/TechnicalData",
+      "kind": "Instance",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "idShort": "GeneralInformation",
+          "displayName": [
+            {
+              "language": "en",
+              "text": "General information"
+            },
+            {
+              "language": "de",
+              "text": "Allgemeine Informationen"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0173-1#02-ABK161#002/0173-1#01-AHX838#002"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://api.eclass-cdp.com/0173-1-02-ABK161-002/0173-1-01-AHX838-002"
+                }
+              ]
+            }
+          ],
+          "value": [
+            {
+              "idShort": "ManufacturerName",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Manufacturer name"
+                },
+                {
+                  "language": "de",
+                  "text": "Herstellername"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAO677#004"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-AAO677-004"
+                    }
+                  ]
+                }
+              ],
+              "valueType": "xs:string",
+              "modelType": "Property",
+              "value": "Suleman Ali (portfolio project, not a commercial product)"
+            },
+            {
+              "idShort": "ManufacturerProductDesignation",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Manufacturer product designation"
+                },
+                {
+                  "language": "de",
+                  "text": "Herstellerproduktbezeichnung"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAW338#003"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-AAW338-003"
+                    }
+                  ]
+                }
+              ],
+              "modelType": "MultiLanguageProperty",
+              "value": [
+                {
+                  "language": "en",
+                  "text": "Heating plant twin, weather-compensated flow temperature control TIC101"
+                },
+                {
+                  "language": "de",
+                  "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101"
+                }
+              ]
+            },
+            {
+              "idShort": "ManufacturerArticleNumber",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Manufacturer article number"
+                },
+                {
+                  "language": "de",
+                  "text": "Herstellerartikelnummer"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAO676#005"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-AAO676-005"
+                    }
+                  ]
+                }
+              ],
+              "valueType": "xs:string",
+              "modelType": "Property",
+              "value": "heating-plant-aas"
+            },
+            {
+              "idShort": "ManufacturerOrderCode",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Manufacturer order code"
+                },
+                {
+                  "language": "de",
+                  "text": "Bestellcode des Herstellers"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-AAO227#004"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-AAO227-004"
+                    }
+                  ]
+                }
+              ],
+              "valueType": "xs:string",
+              "modelType": "Property",
+              "value": "not orderable (demonstrator)"
+            }
+          ],
+          "modelType": "SubmodelElementCollection"
+        },
+        {
+          "idShort": "TechnicalPropertyAreas",
+          "displayName": [
+            {
+              "language": "en",
+              "text": "Technical property areas"
+            },
+            {
+              "language": "de",
+              "text": "Technische Merkmalsbereiche"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0173-1#02-ABK163#002"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://api.eclass-cdp.com/0173-1-02-ABK163-002"
+                }
+              ]
+            }
+          ],
+          "semanticIdListElement": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0173-1#02-ABL358#002/0173-1#01-AHX773#002"
+              }
+            ]
+          },
+          "typeValueListElement": "SubmodelElementCollection",
+          "value": [
+            {
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Technical property area"
+                },
+                {
+                  "language": "de",
+                  "text": "Technischer Merkmalsbereich"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-ABL358#002/0173-1#01-AHX773#002"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "0173-1#02-ABL358#002~0/0173-1#01-AHX773#002"
+                    },
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-ABL358-002/0173-1-01-AHX773-002"
+                    }
+                  ]
+                }
+              ],
+              "value": [
+                {
+                  "idShort": "HeatingCurve",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "RoomTemperatureSetpoint",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/RoomTemperatureSetpoint"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "20.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Room temperature the heating curve is designed for [°C]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "Slope",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Slope"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "1.2",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Heating-curve slope: flow temperature change per K of outdoor temperature [-]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "Level",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Level"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "0.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Parallel shift of the heating curve [K]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "FlowTemperatureMin",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMin"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "25.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Lower limit of the flow temperature setpoint [°C]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "FlowTemperatureMax",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMax"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "75.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Upper limit of the flow temperature setpoint [°C]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                },
+                {
+                  "idShort": "MixingCircuit",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "BoilerTemperature",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/BoilerTemperature"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "75.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Hot-side temperature at the 3-way mixing valve [°C]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "DeadTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/DeadTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "10.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Transport delay of the flow pipe [s]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "TimeConstant",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/TimeConstant"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "60.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PT1 time constant of the circuit storage mass [s]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                },
+                {
+                  "idShort": "ControllerTIC101",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "ProportionalGain",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalGain"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "20.66",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PID_Compact gain after fine tuning [%/K]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "IntegralTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/IntegralTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "20.17",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PID_Compact integral time after fine tuning [s]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "DerivativeTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/DerivativeTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "5.11",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PID_Compact derivative time after fine tuning [s]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "ProportionalWeighting",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalWeighting"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "0.257",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Setpoint weighting b of the P part [-]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "SampleTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/SampleTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "0.4",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PID algorithm sample time [s]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                },
+                {
+                  "idShort": "Controller",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "CPU",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/CPU"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:string",
+                      "modelType": "Property",
+                      "value": "SIMATIC S7-1500 CPU 1511-1 PN (PLCSIM)",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PLC the control program is commissioned on [-]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "CycleTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/CycleTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "0.1",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Cyclic interrupt OB30 period [s]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            }
+          ],
+          "modelType": "SubmodelElementList"
+        },
+        {
+          "idShort": "FurtherInformation",
+          "displayName": [
+            {
+              "language": "en",
+              "text": "Further information"
+            },
+            {
+              "language": "de",
+              "text": "Weitere Informationen"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0173-1#02-ABK164#002"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://api.eclass-cdp.com/0173-1-02-ABK164-002"
+                }
+              ]
+            }
+          ],
+          "value": [
+            {
+              "idShort": "TextStatement",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Text statement"
+                },
+                {
+                  "language": "de",
+                  "text": "Anweisung im Text"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-ABK134#002"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1-02-ABK134-002"
+                    }
+                  ]
+                }
+              ],
+              "value": [
+                {
+                  "language": "en",
+                  "text": "Values from the PLCSIM commissioning of 25 Sep 2026 and the PLC source; every value is traced in SOURCES.md of the repository."
+                }
+              ],
+              "modelType": "MultiLanguageProperty"
+            },
+            {
+              "idShort": "ValidDate",
+              "displayName": [
+                {
+                  "language": "en",
+                  "text": "Validity date"
+                },
+                {
+                  "language": "de",
+                  "text": "Verfallsdatum"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "0173-1#02-ABL775#001"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://api.eclass-cdp.com/0173-1#02-ABL775#001"
+                    }
+                  ]
+                }
+              ],
+              "valueType": "xs:date",
+              "modelType": "Property",
+              "value": "2026-11-10"
+            }
+          ],
+          "modelType": "SubmodelElementCollection"
+        }
+      ],
+      "administration": {
+        "version": "2",
+        "revision": "0"
+      }
+    },
+    {
+      "idShort": "AssetInterfacesDescription",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/2/Submodel"
+          }
+        ]
+      },
+      "description": [
+        {
+          "language": "en",
+          "text": "Definition of the Submodel Asset Interfaces Description identified by its semanticId."
+        }
+      ],
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/sm/AssetInterfacesDescription",
+      "kind": "Instance",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "idShort": "InterfaceOPCUA",
+          "description": [
+            {
+              "language": "en",
+              "text": "Indicates the entry point for a particular asset interface"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/Interface"
+              }
+            ]
+          },
+          "supplementalSemanticIds": [
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "http://opcfoundation.org/UA/WoT-Binding/"
+                }
+              ]
+            },
+            {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://www.w3.org/2019/wot/td"
+                }
+              ]
+            }
+          ],
+          "qualifiers": [
+            {
+              "kind": "ConceptQualifier",
+              "type": "SMT/Cardinality",
+              "valueType": "xs:string",
+              "value": "OneToMany"
+            }
+          ],
+          "value": [
+            {
+              "idShort": "title",
+              "description": [
+                {
+                  "language": "en",
+                  "text": "Provides a human-readable title to give a human-readable context of the interface."
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://www.w3.org/2019/wot/td#title"
+                  }
+                ]
+              },
+              "qualifiers": [
+                {
+                  "kind": "ConceptQualifier",
+                  "type": "SMT/Cardinality",
+                  "valueType": "xs:string",
+                  "value": "One"
+                }
+              ],
+              "valueType": "xs:string",
+              "modelType": "Property",
+              "value": "Heating plant twin (TIC101, TI102, TI103)"
+            },
+            {
+              "idShort": "EndpointMetadata",
+              "description": [
+                {
+                  "language": "en",
+                  "text": "Provides the metadata of the asset’s endpoint (base, content type that is used for interaction, etc)"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/EndpointMetadata"
+                  }
+                ]
+              },
+              "qualifiers": [
+                {
+                  "kind": "ConceptQualifier",
+                  "type": "SMT/Cardinality",
+                  "valueType": "xs:string",
+                  "value": "One"
+                }
+              ],
+              "value": [
+                {
+                  "idShort": "base",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Defines asset connection entry point. Each protocol specifies a base pattern. Please see Annex B.1 of the AID document for more details."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/td#baseURI"
+                      }
+                    ]
+                  },
+                  "qualifiers": [
+                    {
+                      "kind": "ConceptQualifier",
+                      "type": "SMT/Cardinality",
+                      "valueType": "xs:string",
+                      "value": "ZeroToOne"
+                    }
+                  ],
+                  "valueType": "xs:string",
+                  "value": "opc.tcp://127.0.0.1:4840/heating-plant/",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "contentType",
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/hypermedia#forContentType"
+                      }
+                    ]
+                  },
+                  "qualifiers": [
+                    {
+                      "kind": "ConceptQualifier",
+                      "type": "SMT/Cardinality",
+                      "valueType": "xs:string",
+                      "value": "ZeroToOne"
+                    }
+                  ],
+                  "valueType": "xs:string",
+                  "value": "application/octet-stream",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "security",
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/td#hasSecurityConfiguration"
+                      }
+                    ]
+                  },
+                  "qualifiers": [
+                    {
+                      "kind": "ConceptQualifier",
+                      "type": "SMT/Cardinality",
+                      "valueType": "xs:string",
+                      "value": "One"
+                    }
+                  ],
+                  "orderRelevant": true,
+                  "semanticIdListElement": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/td#definesSecurityScheme"
+                      }
+                    ]
+                  },
+                  "typeValueListElement": "ReferenceElement",
+                  "value": [
+                    {
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://www.w3.org/2019/wot/td#definesSecurityScheme"
+                          }
+                        ]
+                      },
+                      "value": {
+                        "type": "ModelReference",
+                        "keys": [
+                          {
+                            "type": "Submodel",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/sm/AssetInterfacesDescription"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "InterfaceOPCUA"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "EndpointMetadata"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "securityDefinitions"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "nosec_sc"
+                          }
+                        ]
+                      },
+                      "modelType": "ReferenceElement"
+                    }
+                  ],
+                  "modelType": "SubmodelElementList"
+                },
+                {
+                  "idShort": "securityDefinitions",
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/td#definesSecurityScheme"
+                      }
+                    ]
+                  },
+                  "qualifiers": [
+                    {
+                      "kind": "ConceptQualifier",
+                      "type": "SMT/Cardinality",
+                      "valueType": "xs:string",
+                      "value": "One"
+                    }
+                  ],
+                  "value": [
+                    {
+                      "idShort": "nosec_sc",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "No security scheme definition"
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://www.w3.org/2019/wot/security#NoSecurityScheme"
+                          }
+                        ]
+                      },
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToOne"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "scheme",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Defines the security mechanism that used during access. Supported modes one of nosec, basic, digest, bearer, psk, oauth2, apikey, combo, auto, uav_channelsec and uav_authentication_"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/security#SecurityScheme"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "nosec",
+                          "modelType": "Property"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            },
+            {
+              "idShort": "InteractionMetadata",
+              "description": [
+                {
+                  "language": "en",
+                  "text": "Provides the metadata of the actually interfaces such as which datapoints and functions are provided by the properties, actions, and events interaction abstraction"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/InteractionMetadata"
+                  }
+                ]
+              },
+              "supplementalSemanticIds": [
+                {
+                  "type": "ExternalReference",
+                  "keys": [
+                    {
+                      "type": "GlobalReference",
+                      "value": "https://www.w3.org/2019/wot/td#InteractionAffordance"
+                    }
+                  ]
+                }
+              ],
+              "qualifiers": [
+                {
+                  "kind": "ConceptQualifier",
+                  "type": "SMT/Cardinality",
+                  "valueType": "xs:string",
+                  "value": "One"
+                }
+              ],
+              "value": [
+                {
+                  "idShort": "properties",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Collection of asset’s datapoint definitions as property SMC "
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://www.w3.org/2019/wot/td#PropertyAffordance"
+                      }
+                    ]
+                  },
+                  "qualifiers": [
+                    {
+                      "kind": "ConceptQualifier",
+                      "type": "SMT/Cardinality",
+                      "valueType": "xs:string",
+                      "value": "ZeroToOne"
+                    }
+                  ],
+                  "value": [
+                    {
+                      "idShort": "TIC101_SP",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToMany"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "TIC101.SP"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Flow temperature setpoint from the heating curve"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "CEL"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Constraint",
+                              "valueType": "xs:string",
+                              "value": "Only applicable for number-/interger-based values"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Select",
+                              "valueType": "xs:string",
+                              "value": "minimum | maximum | minimum AND maximum as supplementalSem.Id"
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "120.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "One"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=TIC101.SP"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "ZeroToOne"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:TIC101/2:SP"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "TIC101_PV",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToMany"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "TIC101.PV"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Flow temperature after mixing valve (TI101)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "CEL"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Constraint",
+                              "valueType": "xs:string",
+                              "value": "Only applicable for number-/interger-based values"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Select",
+                              "valueType": "xs:string",
+                              "value": "minimum | maximum | minimum AND maximum as supplementalSem.Id"
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "120.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "One"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=TIC101.PV"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "ZeroToOne"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:TIC101/2:PV"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "TIC101_OP",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToMany"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "TIC101.OP"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Mixing valve TV101 position (controller output)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P1"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Constraint",
+                              "valueType": "xs:string",
+                              "value": "Only applicable for number-/interger-based values"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Select",
+                              "valueType": "xs:string",
+                              "value": "minimum | maximum | minimum AND maximum as supplementalSem.Id"
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "100.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "One"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=TIC101.OP"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "ZeroToOne"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:TIC101/2:OP"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "TI102_PV",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToMany"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "TI102.PV"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Return temperature"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "CEL"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Constraint",
+                              "valueType": "xs:string",
+                              "value": "Only applicable for number-/interger-based values"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Select",
+                              "valueType": "xs:string",
+                              "value": "minimum | maximum | minimum AND maximum as supplementalSem.Id"
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "120.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "One"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=TI102.PV"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "ZeroToOne"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:TI102/2:PV"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "TI103_PV",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "qualifiers": [
+                        {
+                          "kind": "ConceptQualifier",
+                          "type": "SMT/Cardinality",
+                          "valueType": "xs:string",
+                          "value": "ZeroToMany"
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "TI103.PV"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Outdoor temperature (heating-curve input)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "CEL"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "ZeroToOne"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Constraint",
+                              "valueType": "xs:string",
+                              "value": "Only applicable for number-/interger-based values"
+                            },
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "Select",
+                              "valueType": "xs:string",
+                              "value": "minimum | maximum | minimum AND maximum as supplementalSem.Id"
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "-30.0",
+                          "max": "50.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "qualifiers": [
+                            {
+                              "kind": "ConceptQualifier",
+                              "type": "SMT/Cardinality",
+                              "valueType": "xs:string",
+                              "value": "One"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "One"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=TI103.PV"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "qualifiers": [
+                                {
+                                  "kind": "ConceptQualifier",
+                                  "type": "SMT/Cardinality",
+                                  "valueType": "xs:string",
+                                  "value": "ZeroToOne"
+                                }
+                              ],
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:TI103/2:PV"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            }
+          ],
+          "modelType": "SubmodelElementCollection"
+        }
+      ],
+      "administration": {
+        "version": "1",
+        "revision": "2"
+      }
+    }
+  ],
+  "conceptDescriptions": [
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/RoomTemperatureSetpoint",
+      "idShort": "RoomTemperatureSetpoint",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Room temperature the heating curve is designed for. Unit: °C. Source: [D] DB_Heizzentrale.tRaumSoll."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Slope",
+      "idShort": "Slope",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Heating-curve slope: flow temperature change per K of outdoor temperature. Unit: -. Source: [D] DB_Heizzentrale.steigung."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Level",
+      "idShort": "Level",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Parallel shift of the heating curve. Unit: K. Source: [D] DB_Heizzentrale.niveau."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMin",
+      "idShort": "FlowTemperatureMin",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Lower limit of the flow temperature setpoint. Unit: °C. Source: [D] DB_Heizzentrale.tVorlaufMin."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMax",
+      "idShort": "FlowTemperatureMax",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Upper limit of the flow temperature setpoint. Unit: °C. Source: [D] DB_Heizzentrale.tVorlaufMax."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/BoilerTemperature",
+      "idShort": "BoilerTemperature",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Hot-side temperature at the 3-way mixing valve. Unit: °C. Source: [D] DB_Heizzentrale.tKessel."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/DeadTime",
+      "idShort": "DeadTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Transport delay of the flow pipe. Unit: s. Source: [D] FB_StreckeVorlauf.iTotzeit."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/TimeConstant",
+      "idShort": "TimeConstant",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PT1 time constant of the circuit storage mass. Unit: s. Source: [D] FB_StreckeVorlauf.iZeitkonstante."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalGain",
+      "idShort": "ProportionalGain",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PID_Compact gain after fine tuning. Unit: %/K. Source: [M] commissioning test 4."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/IntegralTime",
+      "idShort": "IntegralTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PID_Compact integral time after fine tuning. Unit: s. Source: [M] commissioning test 4."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/DerivativeTime",
+      "idShort": "DerivativeTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PID_Compact derivative time after fine tuning. Unit: s. Source: [M] commissioning test 4."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalWeighting",
+      "idShort": "ProportionalWeighting",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Setpoint weighting b of the P part. Unit: -. Source: [M] commissioning test 4."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/SampleTime",
+      "idShort": "SampleTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PID algorithm sample time. Unit: s. Source: [M] commissioning test 4."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/CPU",
+      "idShort": "CPU",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PLC the control program is commissioned on. Unit: none. Source: [D] TIA project hardware configuration."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/CycleTime",
+      "idShort": "CycleTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Cyclic interrupt OB30 period. Unit: s. Source: [D] OB30."
+        }
+      ]
+    }
+  ]
+}
