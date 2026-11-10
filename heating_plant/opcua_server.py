@@ -235,6 +235,8 @@ async def export_nodeset(path: pathlib.Path) -> None:
                 nodes.append(c)
                 queue.append(c)
     await server.export_xml(nodes, str(path))
+    # LF on every OS, so CI can check the committed file is up to date byte for byte
+    path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n"))
 
 
 if __name__ == "__main__":

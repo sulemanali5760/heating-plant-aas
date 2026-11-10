@@ -1,0 +1,9 @@
+{
+  "name": "nodeset-check",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "node-opcua-address-space": "2.187.26",
+    "node-opcua-nodesets": "2.187.4"
+  }
+}

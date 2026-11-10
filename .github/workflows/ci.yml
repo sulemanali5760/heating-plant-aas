@@ -25,5 +25,14 @@ jobs:
         run: |
           python -m heating_plant.opcua_server --export-nodeset model/HeatingPlant.NodeSet2.xml
           git diff --exit-code model/HeatingPlant.aas.json model/HeatingPlant.NodeSet2.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Independent NodeSet check with a second OPC UA stack (node-opcua)
+        working-directory: tools/nodeset-check
+        run: |
+          npm ci --ignore-scripts
+          npm audit --audit-level=high
+          node check.mjs
       - name: Known vulnerabilities in dependencies
         run: python -m pip_audit -r requirements.txt

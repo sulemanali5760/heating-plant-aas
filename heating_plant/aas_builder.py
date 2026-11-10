@@ -255,7 +255,8 @@ def write(out_dir: pathlib.Path = ROOT / "model") -> tuple[pathlib.Path, pathlib
 
     out_dir.mkdir(exist_ok=True)
     js = out_dir / "HeatingPlant.aas.json"
-    js.write_text(json.dumps(environment(), indent=2, ensure_ascii=False), encoding="utf-8")
+    # LF on every OS, so CI can check the committed file is up to date byte for byte
+    js.write_text(json.dumps(environment(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     with js.open(encoding="utf-8") as f:
         store = read_aas_json_file(f, failsafe=False)  # strict: raises on any metamodel violation
     ax = out_dir / "HeatingPlant.aasx"
