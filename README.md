@@ -1,5 +1,7 @@
 # heating-plant-aas
 
+[![ci](https://github.com/sulemanali5760/heating-plant-aas/actions/workflows/ci.yml/badge.svg)](https://github.com/sulemanali5760/heating-plant-aas/actions/workflows/ci.yml)
+
 A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM), turned into an **Industrie 4.0 component**: a Python twin of both control loops, a secured **OPC UA server** with a typed information model, and an **Asset Administration Shell (AAS)** built from official IDTA templates and served through the standard AAS REST API. A client that knows nothing about the plant reads the AAS, finds the endpoint, the security settings and the datapoints in it, and connects. No hand-written tag list.
 
 ![AID client connecting with nothing but the AASX](docs/demo_aid_client.gif)
