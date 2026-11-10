@@ -23,7 +23,7 @@ from asyncua.crypto.validator import CertificateValidator, CertificateValidatorO
 from asyncua.common.utils import ServiceError
 
 from heating_plant import security
-from heating_plant.model import HeatingPlant
+from heating_plant.model import HeatingPlant, Pid2Dof
 
 logging.getLogger("asyncua.common.instantiate_util").setLevel(logging.ERROR)  # type-attribute copy notes
 
@@ -230,12 +230,15 @@ def load_dwd() -> list[float]:
 
 async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: str = "dwd",
               endpoint: str = ENDPOINT, ready: asyncio.Event | None = None,
-              password: str | None = None, pki: pathlib.Path = security.PKI) -> None:
+              password: str | None = None, pki: pathlib.Path = security.PKI, plant_kind: str = "twin",
+              tclab_pi: tuple[float, float] | None = None) -> None:
     """Run the twin and serve it.
     outdoor="dwd": replay the real Magdeburg week, one DWD hour every 3600/time_lapse s.
     outdoor="manual": the outdoor temperature comes from Simulation.OutdoorTemperature (OPC UA write).
     password=None: no security (local demo only). Otherwise Basic256Sha256 SignAndEncrypt, trusted client
-    certificates only, username "operator" with this password."""
+    certificates only, username "operator" with this password.
+    plant_kind: "twin" (simulated mixing circuit), "tclab-emulator" or "tclab" (real rig on USB, real time).
+    TCLab: TIC101 drives heater Q1 and reads T1 with a SIMC PI from a step-test identification."""
     secure = password is not None
     server = Server(user_manager=security.PasswordUserManager(security.USERNAME, password) if secure else None)
     await server.init()
@@ -254,7 +257,15 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
     idx, n = await build(server)
     hours = load_dwd() if outdoor == "dwd" else None
     plant = HeatingPlant(t_outdoor=hours[0] if hours else 0.0)
-    plant.settle()
+    if plant_kind == "twin":
+        plant.settle()
+    else:
+        from heating_plant import tclab_backend as tb
+        if plant_kind == "tclab" and (tclab_pi is None or time_lapse != 1):
+            raise ValueError("Real TCLab: pass tclab_pi from a hardware step test and run in real time")
+        kc, ti = tclab_pi or tb.identify(tb.step_test()).simc_pi()
+        plant.circuit = tb.TCLabCircuit(hardware=plant_kind == "tclab")
+        plant.pid = Pid2Dof(kp=kc, ti=ti, td=0.0, b=1.0, c=0.0, ts=1.0)
     await n["TI103.PV"].write_value(plant.t_outdoor)
     await n["Simulation.OutdoorTemperature"].write_value(plant.t_outdoor)
     async with server:
@@ -311,10 +322,14 @@ if __name__ == "__main__":
     ap.add_argument("--time-lapse", type=float, default=60.0, help="plant seconds per wall second")
     ap.add_argument("--export-nodeset", type=pathlib.Path)
     ap.add_argument("--insecure", action="store_true", help="no encryption, no login (local demo only)")
+    ap.add_argument("--plant", choices=["twin", "tclab-emulator", "tclab"], default="twin")
+    ap.add_argument("--tclab-pi", type=float, nargs=2, metavar=("KC", "TI"),
+                    help="PI from a step test on the real rig (required with --plant tclab)")
     a = ap.parse_args()
     if a.export_nodeset:
         asyncio.run(export_nodeset(a.export_nodeset))
     else:
         pw = None if a.insecure else security.password_from_env()
         print(f"Serving {ENDPOINT} ({'NO security' if a.insecure else 'Basic256Sha256 SignAndEncrypt, user operator'})")
-        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor, password=pw))
+        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor, password=pw, plant_kind=a.plant,
+                        tclab_pi=tuple(a.tclab_pi) if a.tclab_pi else None))

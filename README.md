@@ -30,6 +30,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description, IDTA 02008-1-1 Time Series Data (the Magdeburg week, 168 hourly records) |
 | AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…`, `uav:browsePath`, and security from `uav:channelsec` / `uav:authentication` (OPC 10101 WoT binding) |
 | AAS REST API | `heating_plant/aas_server.py` | IDTA 01002 AAS Part 2 API v3.1 via the Eclipse BaSyx Python server (read-only repository: `/shells`, `/submodels`, element by idShort path) |
+| Hardware path | `heating_plant/tclab_backend.py` | TCLab (Arduino temperature lab): step test, two-point FOPDT identification, SIMC PI; `--plant tclab-emulator` / `--plant tclab` run the same OPC UA model on it |
 | Security | `heating_plant/security.py` | OPC UA Basic256Sha256, SignAndEncrypt, X.509 application certificates with trust list, UserName token (OPC 10000-2/-4/-7); password checked as PBKDF2-HMAC-SHA256 hash |
 
 ## How it is validated
@@ -46,6 +47,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | AAS submodels | Element by element against the official IDTA template JSON (mandatory elements, semantic IDs) | pass |
 | AID | Every `href` and browse path resolves to the same node on the live server | pass |
 | AAS REST API | `/shells` and every `/submodels/{id}` return what the AASX contains; writes refused | pass |
+| TCLab path (emulator) | Identified gain vs the emulator's own energy balance; SIMC PI reaches 44 °C; same OPC UA model served | pass (hardware itself not tested) |
 | Security | Basic256Sha256 SignAndEncrypt + UserName: trusted client reads; no encryption, wrong password, untrusted certificate are each refused | pass |
 
 The PLCSIM values come from the author's TIA Portal V19 project (commissioned 25 Sep 2026). Every number in this repository is traced in [SOURCES.md](SOURCES.md) as measured, standard/datasheet, design decision, or assumption.

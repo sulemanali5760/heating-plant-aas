@@ -110,6 +110,16 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | `$value` endpoint | [S] | Answered 501 Not Implemented by BaSyx 2.2.0 (`app/interfaces/repository.py`); tests read the full element instead |
 | Read-only, localhost | [D] | The AASX stays the single source of truth; the server publishes it, it does not edit it |
 
+## Hardware path: TCLab (`heating_plant/tclab_backend.py`)
+
+| Item | Tag | Source |
+|---|---|---|
+| TCLab rig and emulator | [S] | `tclab` 1.0.0 (Apache-2.0, BYU PRISM / github.com/jckantor/TCLab), `TCLabModel` energy balance in `tclab/tclab.py`; depends on pyserial |
+| Two-point FOPDT identification (t28, t63) | [S] | C. L. Smith, *Digital Computer Process Control*, 1972; tau = 1.5·(t63 − t28), theta = t63 − tau |
+| SIMC PI tuning, tau_c = theta | [S] | S. Skogestad, "Simple analytic rules for model reduction and PID controller tuning", J. Process Control 13 (2003) 291–309 |
+| Identified emulator model | [M] | K ≈ 0.60 K/% (analytic from the emulator equations: 0.5994), tau ≈ 140 s, theta ≈ 20 s; small run-to-run spread from the emulator's measurement noise |
+| Real hardware | [A] | Not tested (no rig available). The server refuses `--plant tclab` without PI values from a hardware step test, and runs it only in real time. |
+
 ## Plots (`scripts/week_plot.py`, `docs/`)
 
 | Item | Tag | Source |
