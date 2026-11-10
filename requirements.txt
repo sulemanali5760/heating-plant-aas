@@ -1,0 +1,5 @@
+asyncua==2.1.0
+basyx-python-sdk==2.2.0
+aas-test-engines==1.0.3
+pytest
+pip-audit

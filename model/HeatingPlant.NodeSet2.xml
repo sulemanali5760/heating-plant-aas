@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">
+  <NamespaceUris>
+    <Uri>https://github.com/sulemanali5760/heating-plant-aas/UA/</Uri>
+  </NamespaceUris>
+  <Aliases>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="EUInformation">i=887</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="Range">i=884</Alias>
+  </Aliases>
+  <UAObject NodeId="ns=1;s=HeatingPlant" BrowseName="1:HeatingPlant" ParentNodeId="i=85">
+    <DisplayName>HeatingPlant</DisplayName>
+    <Description>HeatingPlant</Description>
+    <References>
+      <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TIC101</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TI102</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TI103</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=TIC101" BrowseName="1:TIC101" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>TIC101</DisplayName>
+    <Description>Flow temperature control loop (heating curve -&gt; PID -&gt; mixing valve)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TIC101.SP</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TIC101.PV</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TIC101.OP</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=TI102" BrowseName="1:TI102" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>TI102</DisplayName>
+    <Description>Return temperature indication</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TI102.PV</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=TI103" BrowseName="1:TI103" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>TI103</DisplayName>
+    <Description>Outdoor temperature indication</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TI103.PV</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingCurve" BrowseName="1:HeatingCurve" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>HeatingCurve</DisplayName>
+    <Description>HeatingCurve</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.Slope</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.Level</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.FlowMax</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=HeatingCurve.Slope" BrowseName="1:Slope" ParentNodeId="ns=1;s=HeatingCurve" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>Slope</DisplayName>
+    <Description>Heating curve slope (-)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurve</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=HeatingCurve.Level" BrowseName="1:Level" ParentNodeId="ns=1;s=HeatingCurve" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>Level</DisplayName>
+    <Description>Heating curve parallel shift (K)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurve</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=HeatingCurve.FlowMax" BrowseName="1:FlowMax" ParentNodeId="ns=1;s=HeatingCurve" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>FlowMax</DisplayName>
+    <Description>Flow temperature upper limit (°C)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurve</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI103.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TI103" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>PV</DisplayName>
+    <Description>Outdoor temperature (heating-curve input)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TI103</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TI103.PV.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TI103.PV.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI103.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TI103.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TI103.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI103.PV.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=TI103.PV" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TI103.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI102.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TI102" DataType="Double">
+    <DisplayName>PV</DisplayName>
+    <Description>Return temperature</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TI102</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TI102.PV.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TI102.PV.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI102.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TI102.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TI102.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI102.PV.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=TI102.PV" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TI102.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.SP" BrowseName="1:SP" ParentNodeId="ns=1;s=TIC101" DataType="Double">
+    <DisplayName>SP</DisplayName>
+    <Description>Flow temperature setpoint from the heating curve</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TIC101</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.SP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.SP.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TIC101" DataType="Double">
+    <DisplayName>PV</DisplayName>
+    <Description>Flow temperature after mixing valve (TI101)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TIC101</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.PV.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.PV.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.OP" BrowseName="1:OP" ParentNodeId="ns=1;s=TIC101" DataType="Double">
+    <DisplayName>OP</DisplayName>
+    <Description>Mixing valve TV101 position (controller output)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TIC101</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.OP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TIC101.OP.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.OP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TIC101.OP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.OP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.OP.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=TIC101.OP" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.OP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TIC101.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.PV.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=TIC101.PV" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.SP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TIC101.SP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TIC101.SP.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=TIC101.SP" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+</UANodeSet>
