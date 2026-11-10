@@ -76,6 +76,54 @@ PARAMETERS = [
 ]
 
 
+async def _type_member(server: Server, owner, idx: int, type_id: str, name: str, analog: bool):
+    """Mandatory child of an ObjectType (ModellingRule Mandatory, OPC 10000-3, 6.4.4)."""
+    if analog:
+        analog_type = server.get_node(ua.NodeId(ua.ObjectIds.AnalogItemType))
+        v = (await instantiate(owner, analog_type, ua.NodeId(f"{type_id}.{name}", idx),
+                               ua.QualifiedName(name, idx), ua.LocalizedText(name), idx=idx,
+                               instantiate_optional=False))[0]
+        await v.write_attribute(ua.AttributeIds.DataType, ua.DataValue(ua.Variant(ua.NodeId(ua.ObjectIds.Double))))
+        await v.write_attribute(ua.AttributeIds.ValueRank, ua.DataValue(ua.Variant(-1, ua.VariantType.Int32)))
+    else:
+        v = await owner.add_variable(ua.NodeId(f"{type_id}.{name}", idx), ua.QualifiedName(name, idx),
+                                     ua.Variant(0.0, ua.VariantType.Double))
+    await v.set_modelling_rule(True)
+    return v
+
+
+async def _build_types(server: Server, idx: int) -> dict:
+    """ObjectTypes of this namespace, so a client sees WHAT each object is, not only its values."""
+    base = server.nodes.base_object_type
+    t = {}
+    t["TemperatureIndicatorType"] = await base.add_object_type(ua.NodeId("TemperatureIndicatorType", idx),
+                                                               ua.QualifiedName("TemperatureIndicatorType", idx))
+    await _type_member(server, t["TemperatureIndicatorType"], idx, "TemperatureIndicatorType", "PV", True)
+    t["TemperatureControlLoopType"] = await base.add_object_type(ua.NodeId("TemperatureControlLoopType", idx),
+                                                                 ua.QualifiedName("TemperatureControlLoopType", idx))
+    for m in ("SP", "PV", "OP"):
+        await _type_member(server, t["TemperatureControlLoopType"], idx, "TemperatureControlLoopType", m, True)
+    t["HeatingCurveType"] = await base.add_object_type(ua.NodeId("HeatingCurveType", idx),
+                                                       ua.QualifiedName("HeatingCurveType", idx))
+    for _, bn, _, _ in PARAMETERS:
+        await _type_member(server, t["HeatingCurveType"], idx, "HeatingCurveType", bn, False)
+    t["HeatingPlantType"] = await base.add_object_type(ua.NodeId("HeatingPlantType", idx),
+                                                       ua.QualifiedName("HeatingPlantType", idx))
+    for name, tname in [("TIC101", "TemperatureControlLoopType"), ("TI102", "TemperatureIndicatorType"),
+                        ("TI103", "TemperatureIndicatorType"), ("HeatingCurve", "HeatingCurveType")]:
+        o = await t["HeatingPlantType"].add_object(ua.NodeId(f"HeatingPlantType.{name}", idx),
+                                                   ua.QualifiedName(name, idx))
+        await _set_type(o, t[tname])
+        await o.set_modelling_rule(True)
+    return t
+
+
+async def _set_type(node, type_node) -> None:
+    await node.delete_reference(ua.NodeId(ua.ObjectIds.BaseObjectType), ua.ObjectIds.HasTypeDefinition,
+                                bidirectional=False)
+    await node.add_reference(type_node, ua.ObjectIds.HasTypeDefinition, bidirectional=False)
+
+
 async def _analog_item(server: Server, parent, idx: int, p: Point):
     # Instantiate the standard AnalogItemType (i=2368) so the type definition, the mandatory
     # EURange and the optional EngineeringUnits are the ones defined by OPC 10000-8.
@@ -103,17 +151,22 @@ async def _analog_item(server: Server, parent, idx: int, p: Point):
 
 async def build(server: Server) -> tuple[int, dict]:
     idx = await server.register_namespace(NAMESPACE)
+    types = await _build_types(server, idx)
     objects = server.nodes.objects
     plant = await objects.add_object(ua.NodeId("HeatingPlant", idx), ua.QualifiedName("HeatingPlant", idx))
+    await _set_type(plant, types["HeatingPlantType"])
     parents = {"": plant}
-    for tag, text in [("TIC101", "Flow temperature control loop (heating curve -> PID -> mixing valve)"),
-                      ("TI102", "Return temperature indication"),
-                      ("TI103", "Outdoor temperature indication")]:
+    for tag, type_name, text in [
+            ("TIC101", "TemperatureControlLoopType", "Flow temperature control loop (heating curve -> PID -> mixing valve)"),
+            ("TI102", "TemperatureIndicatorType", "Return temperature indication"),
+            ("TI103", "TemperatureIndicatorType", "Outdoor temperature indication")]:
         o = await plant.add_object(ua.NodeId(tag, idx), ua.QualifiedName(tag, idx))
+        await _set_type(o, types[type_name])
         await o.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(text))))
         parents[tag] = o
     nodes = {p.node_id: await _analog_item(server, parents[p.parent], idx, p) for p in POINTS}
     hc = await plant.add_object(ua.NodeId("HeatingCurve", idx), ua.QualifiedName("HeatingCurve", idx))
+    await _set_type(hc, types["HeatingCurveType"])
     for nid, bn, desc, default in PARAMETERS:
         v = await hc.add_variable(ua.NodeId(nid, idx), ua.QualifiedName(bn, idx),
                                   ua.Variant(default, ua.VariantType.Double))
@@ -170,9 +223,11 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
 async def export_nodeset(path: pathlib.Path) -> None:
     server = Server()
     await server.init()
-    _, n = await build(server)
+    idx, n = await build(server)
     plant = n["_plant"]
-    nodes = [plant] + await plant.get_children()
+    type_roots = [server.get_node(ua.NodeId(t, idx)) for t in
+                  ("TemperatureIndicatorType", "TemperatureControlLoopType", "HeatingCurveType", "HeatingPlantType")]
+    nodes = type_roots + [plant] + await plant.get_children()
     queue = list(nodes)
     while queue:
         for c in await queue.pop().get_children():

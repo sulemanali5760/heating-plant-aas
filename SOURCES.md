@@ -48,6 +48,7 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 
 | Item | Tag | Source |
 |---|---|---|
+| ObjectTypes with ModellingRule Mandatory (i=78) | [S] | OPC 10000-3 Address Space Model, 6.4.4 |
 | AnalogItemType (i=2368), EURange, EngineeringUnits | [S] | OPC 10000-8 UA Part 8: Data Access, 5.3.2 and 5.6 |
 | Units CEL (°C) = 4408652, P1 (%) = 20529 | [S] | UNECE Recommendation 20 common codes; unitId encoding OPC 10000-8, 5.6.3; namespace `http://www.opcfoundation.org/UA/units/un/cefact` |
 | Signal names TIC101, TI102, TI103, TV101 | [D] | `heizzentrale-tia/docs/EMSR_Stellenliste.csv` (tags per IEC 62424 style) |

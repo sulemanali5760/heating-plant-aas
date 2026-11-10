@@ -6,18 +6,59 @@
   <Aliases>
     <Alias Alias="Double">i=11</Alias>
     <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
     <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
     <Alias Alias="HasComponent">i=47</Alias>
     <Alias Alias="EUInformation">i=887</Alias>
     <Alias Alias="HasProperty">i=46</Alias>
     <Alias Alias="Range">i=884</Alias>
   </Aliases>
+  <UAObjectType NodeId="ns=1;s=TemperatureIndicatorType" BrowseName="1:TemperatureIndicatorType">
+    <DisplayName>TemperatureIndicatorType</DisplayName>
+    <Description>TemperatureIndicatorType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureIndicatorType.PV</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;s=TemperatureControlLoopType" BrowseName="1:TemperatureControlLoopType">
+    <DisplayName>TemperatureControlLoopType</DisplayName>
+    <Description>TemperatureControlLoopType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.SP</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.PV</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.OP</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;s=HeatingCurveType" BrowseName="1:HeatingCurveType">
+    <DisplayName>HeatingCurveType</DisplayName>
+    <Description>HeatingCurveType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurveType.Slope</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurveType.Level</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurveType.FlowMax</Reference>
+    </References>
+  </UAObjectType>
+  <UAObjectType NodeId="ns=1;s=HeatingPlantType" BrowseName="1:HeatingPlantType">
+    <DisplayName>HeatingPlantType</DisplayName>
+    <Description>HeatingPlantType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TIC101</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TI102</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TI103</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.HeatingCurve</Reference>
+    </References>
+  </UAObjectType>
   <UAObject NodeId="ns=1;s=HeatingPlant" BrowseName="1:HeatingPlant" ParentNodeId="i=85">
     <DisplayName>HeatingPlant</DisplayName>
     <Description>HeatingPlant</Description>
     <References>
       <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=HeatingPlantType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI102</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI103</Reference>
@@ -29,7 +70,7 @@
     <Description>Flow temperature control loop (heating curve -&gt; PID -&gt; mixing valve)</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureControlLoopType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.SP</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.PV</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.OP</Reference>
@@ -40,7 +81,7 @@
     <Description>Return temperature indication</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureIndicatorType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI102.PV</Reference>
     </References>
   </UAObject>
@@ -49,7 +90,7 @@
     <Description>Outdoor temperature indication</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureIndicatorType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI103.PV</Reference>
     </References>
   </UAObject>
@@ -58,7 +99,7 @@
     <Description>HeatingCurve</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=HeatingCurveType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.Slope</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.Level</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.FlowMax</Reference>
@@ -210,6 +251,133 @@
     <Description>EngineeringUnits</Description>
     <References>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TIC101.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.TIC101" BrowseName="1:TIC101" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>TIC101</DisplayName>
+    <Description>TIC101</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.TI102" BrowseName="1:TI102" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>TI102</DisplayName>
+    <Description>TI102</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureIndicatorType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.TI103" BrowseName="1:TI103" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>TI103</DisplayName>
+    <Description>TI103</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureIndicatorType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.HeatingCurve" BrowseName="1:HeatingCurve" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>HeatingCurve</DisplayName>
+    <Description>HeatingCurve</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=HeatingCurveType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=HeatingCurveType.Slope" BrowseName="1:Slope" ParentNodeId="ns=1;s=HeatingCurveType" DataType="Double">
+    <DisplayName>Slope</DisplayName>
+    <Description>Slope</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurveType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=HeatingCurveType.Level" BrowseName="1:Level" ParentNodeId="ns=1;s=HeatingCurveType" DataType="Double">
+    <DisplayName>Level</DisplayName>
+    <Description>Level</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurveType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=HeatingCurveType.FlowMax" BrowseName="1:FlowMax" ParentNodeId="ns=1;s=HeatingCurveType" DataType="Double">
+    <DisplayName>FlowMax</DisplayName>
+    <Description>FlowMax</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingCurveType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.SP" BrowseName="1:SP" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+    <DisplayName>SP</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.SP.EURange</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+    <DisplayName>PV</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.PV.EURange</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.OP" BrowseName="1:OP" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+    <DisplayName>OP</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.OP.EURange</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.OP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.OP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.OP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.SP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.SP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureIndicatorType.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TemperatureIndicatorType" DataType="Double">
+    <DisplayName>PV</DisplayName>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureIndicatorType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureIndicatorType.PV.EURange</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TemperatureIndicatorType.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureIndicatorType.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureIndicatorType.PV</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
     </References>
   </UAVariable>

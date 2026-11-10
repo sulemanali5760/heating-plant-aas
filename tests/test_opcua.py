@@ -27,6 +27,15 @@ async def _scenario():
             eu = await (await v.get_child(["0:EngineeringUnits"])).read_value()
             assert eu.NamespaceUri == "http://www.opcfoundation.org/UA/units/un/cefact"
 
+        # Objects are typed with this namespace's ObjectTypes
+        for obj, tname in [("HeatingPlant", "HeatingPlantType"), ("TIC101", "TemperatureControlLoopType"),
+                           ("TI102", "TemperatureIndicatorType"), ("TI103", "TemperatureIndicatorType"),
+                           ("HeatingCurve", "HeatingCurveType")]:
+            assert await node(obj).read_type_definition() == ua.NodeId(tname, idx), obj
+        loop_type = node("TemperatureControlLoopType")
+        members = {(await m.read_browse_name()).Name for m in await loop_type.get_children()}
+        assert {"SP", "PV", "OP"} <= members
+
         # Browse path from the Objects folder, as the AAS uses it (uav:browsePath)
         pv = await c.nodes.objects.get_child([f"{idx}:HeatingPlant", f"{idx}:TIC101", f"{idx}:PV"])
         assert pv.nodeid == ua.NodeId("TIC101.PV", idx)
