@@ -77,6 +77,8 @@ The second line creates the client certificate and puts it into the server's tru
 - **Certificates are self-signed.** A plant would use certificates from its own CA (OPC UA GDS or company PKI) and certificate revocation lists.
 - **PID_Compact** is reproduced from its documented structure. Siemens-internal details are not public, so the dynamic test uses tolerances.
 - **Technical Data properties** use concept descriptions defined in this repo, because no ECLASS/IEC CDD properties could be verified free of charge for these quantities.
+- **TCLab hardware not tested:** the TCLab path is tested on the emulator only; a real rig needs its own step test and tuning.
+- **REST API is read-only** and serves the AAS file; live values stay on OPC UA, where the AID points.
 - **Not a product:** the nameplate says so. It describes a demonstrator, not something you can order.
 
 ## Kurz auf Deutsch
