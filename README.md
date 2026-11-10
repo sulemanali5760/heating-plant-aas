@@ -1,6 +1,10 @@
 # heating-plant-aas
 
-A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM), turned into an **Industrie 4.0 component**: a Python twin of the same control loop, an **OPC UA server** with a typed information model, and an **Asset Administration Shell (AAS)** built from official IDTA templates. A client that knows nothing about the plant reads the AAS, finds the OPC UA endpoint and datapoints in it, and connects. No hand-written tag list.
+A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM), turned into an **Industrie 4.0 component**: a Python twin of both control loops, a secured **OPC UA server** with a typed information model, and an **Asset Administration Shell (AAS)** built from official IDTA templates and served through the standard AAS REST API. A client that knows nothing about the plant reads the AAS, finds the endpoint, the security settings and the datapoints in it, and connects. No hand-written tag list.
+
+![AID client connecting with nothing but the AASX](docs/demo_aid_client.gif)
+
+*Recorded run: the client opens `HeatingPlant.aasx`, learns from the Asset Interfaces Description that the server wants Basic256Sha256 / SignAndEncrypt and a UserName login, connects and subscribes to all 8 datapoints.*
 
 ![Twin on the real coldest week of 2022 in Magdeburg](docs/week_magdeburg_2022-12.png)
 
@@ -9,24 +13,26 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 ## What is in it
 
 ```
- DWD hourly outdoor temperature (real data)
-            │
-            ▼
- ┌──────────────────────────────┐        OPC UA (asyncua)                   AAS (.aasx, IDTA templates)
- │ Plant twin, 100 ms cycle     │  ──►  HeatingPlant                         ├─ Digital Nameplate 3.0
- │ heating curve → PID → valve  │        ├─ TIC101  SP · PV · OP            ├─ Technical Data 2.0
- │ → dead time → PT1            │        ├─ TI102   PV                      └─ Asset Interfaces Description 1.2
- │ (1:1 port of the SCL blocks) │        └─ TI103   PV  (writable)                 endpoint + href per datapoint
- └──────────────────────────────┘        AnalogItemType, EURange, UNECE units        │
-                                                    ▲                                │
-                                                    └──────── AID client ◄───────────┘
-                                                      reads only the AASX, subscribes
+ DWD hourly outdoor temperature (real data)          optional: TCLab rig / emulator instead of the mixing circuit
+            │                                                         │
+            ▼                                                         ▼
+ ┌──────────────────────────────┐   OPC UA, Basic256Sha256        AAS (.aasx, IDTA templates)
+ │ Plant twin, 100 ms cycle     │   SignAndEncrypt + login        ├─ Digital Nameplate 3.0
+ │ TIC101: heating curve → PID  │──► HeatingPlant                  ├─ Technical Data 2.0
+ │   → mixing valve → PT1       │    ├─ TIC101  SP · PV · OP       ├─ Asset Interfaces Description 1.2
+ │ PDIC301: release → PI → pump │    ├─ PDIC301 SP · PV · OP       │    endpoint, security, href per datapoint
+ │   → network (affinity law)   │    ├─ TI102, TI103 PV            └─ Time Series Data 1.1 (Magdeburg week)
+ │ (1:1 port of the SCL blocks) │    └─ Simulation inputs                 │                │
+ └──────────────────────────────┘    typed ObjectTypes, AnalogItems      │                ▼
+                                               ▲                         │      AAS Part 2 REST API (BaSyx)
+                                               └──── AID client ◄────────┘
+                                         reads only the AASX, applies its security, subscribes
 ```
 
 | Part | File | Standard |
 |---|---|---|
-| Plant twin | `heating_plant/model.py` | Port of `FC_Heizkurve` and `FB_StreckeVorlauf` from the PLC project; 2-DOF PIDT1 as documented for PID_Compact |
-| OPC UA server | `heating_plant/opcua_server.py`, `model/HeatingPlant.NodeSet2.xml` | Own ObjectTypes (`HeatingPlantType`, `TemperatureControlLoopType`, `TemperatureIndicatorType`, `HeatingCurveType`) with mandatory members (OPC 10000-3); values as AnalogItemType with EURange and EngineeringUnits (OPC 10000-8), UNECE Rec. 20 units |
+| Plant twin | `heating_plant/model.py` | Port of `FC_Heizkurve`, `FB_StreckeVorlauf`, `FB_Netzpumpe`, `FB_ModellNetz` from the PLC project; 2-DOF PIDT1 as documented for PID_Compact |
+| OPC UA server | `heating_plant/opcua_server.py`, `model/HeatingPlant.NodeSet2.xml` | Own ObjectTypes (`HeatingPlantType`, `ControlLoopType`, `TemperatureIndicatorType`, `HeatingCurveType`, `SimulationInputsType`) with mandatory members (OPC 10000-3); values as AnalogItemType with EURange and EngineeringUnits (OPC 10000-8), UNECE Rec. 20 units |
 | AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description, IDTA 02008-1-1 Time Series Data (the Magdeburg week, 168 hourly records) |
 | AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…`, `uav:browsePath`, and security from `uav:channelsec` / `uav:authentication` (OPC 10101 WoT binding) |
 | AAS REST API | `heating_plant/aas_server.py` | IDTA 01002 AAS Part 2 API v3.1 via the Eclipse BaSyx Python server (read-only repository: `/shells`, `/submodels`, element by idShort path) |
@@ -64,7 +70,7 @@ python -m heating_plant.aas_server                                       # AAS P
 python -m pytest                                                        # all checks
 ```
 
-The second line creates the client certificate and puts it into the server's trust list, the step an administrator does once. Certificates live in `pki/` (git-ignored); the password is only read from the environment. `--insecure` starts a local demo without encryption or login, and `--outdoor manual` makes `TI103.PV` writable from any OPC UA client (e.g. UaExpert), so you can change the weather by hand.
+The second line creates the client certificate and puts it into the server's trust list, the step an administrator does once. Certificates live in `pki/` (git-ignored); the password is only read from the environment. `--insecure` starts a local demo without encryption or login. `--outdoor manual` lets any OPC UA client (e.g. UaExpert) change the weather through `Simulation.OutdoorTemperature`; `Simulation.ConsumerLoad` changes the pump load. `--plant tclab-emulator` runs loop TIC101 on the TCLab emulator; `--plant tclab --time-lapse 1 --tclab-pi KC TI` on a real rig (tune it with a step test first).
 
 ## Limits (on purpose)
 
@@ -75,7 +81,7 @@ The second line creates the client certificate and puts it into the server's tru
 
 ## Kurz auf Deutsch
 
-Eine Heizzentrale mit witterungsgeführter Vorlauftemperaturregelung (S7-1500, PLCSIM) als Industrie-4.0-Komponente: Python-Zwilling derselben Regelstrecke, OPC-UA-Server mit typisiertem Informationsmodell und eine Verwaltungsschale aus offiziellen IDTA-Vorlagen. Ein Client liest nur die Verwaltungsschale (Asset Interfaces Description) und verbindet sich damit selbstständig. Der Zwilling ist gegen die PLCSIM-Inbetriebnahme geprüft und läuft mit echten DWD-Außentemperaturen aus Magdeburg.
+Eine Heizzentrale mit witterungsgeführter Vorlauftemperaturregelung und Netzpumpen-Differenzdruckregelung (S7-1500, PLCSIM) als Industrie-4.0-Komponente: Python-Zwilling beider Regelkreise, gesicherter OPC-UA-Server mit typisiertem Informationsmodell und eine Verwaltungsschale aus offiziellen IDTA-Vorlagen. Ein Client liest nur die Verwaltungsschale (Asset Interfaces Description) und verbindet sich damit selbstständig. Der Zwilling ist gegen die PLCSIM-Inbetriebnahme geprüft und läuft mit echten DWD-Außentemperaturen aus Magdeburg.
 
 ## Licence
 

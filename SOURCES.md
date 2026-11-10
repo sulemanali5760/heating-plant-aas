@@ -68,7 +68,7 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Simulation inputs in their own object (`Simulation.OutdoorTemperature`, `Simulation.ConsumerLoad`), all measurements read-only | [D] | Keeps simulated world inputs apart from plant signals |
 | href format `nsu=<namespace>;s=<id>` | [S] | OPC 10101 OPC UA for WoT Binding, 6.1 (reference.opcfoundation.org/specs/OPC-10101/6.1) |
 | Security policy Basic256Sha256, mode SignAndEncrypt, UserName token | [S] | OPC 10000-7 (profiles), OPC 10000-4 (ActivateSession, identity tokens); value names as in OPC 10101, 6.3.3 (uav:securityMode, uav:securityPolicy, uav:userIdentityToken) |
-| Certificate checks: time range, application URI, extended key usage, trust list | [S] | OPC 10000-4, 6.1.3 certificate validation; asyncua CertificateValidator |
+| Certificate checks: time range, application URI, extended key usage, trust list | [S] | OPC 10000-4, 6.1 (certificate validation); asyncua CertificateValidator |
 | Password storage: PBKDF2-HMAC-SHA256, 200 000 iterations, 16-byte salt, constant-time compare | [S] | NIST SP 800-132; Python `hashlib.pbkdf2_hmac`, `hmac.compare_digest` |
 | Self-signed certificates | [A] | Demo; a plant uses its own CA / OPC UA GDS. |
 | `--insecure` mode | [A] | Local demo only; secure is the default. |
