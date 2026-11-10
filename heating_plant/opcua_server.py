@@ -18,7 +18,11 @@ from dataclasses import dataclass
 
 from asyncua import Server, ua
 from asyncua.common.instantiate_util import instantiate
+from asyncua.crypto.truststore import TrustStore
+from asyncua.crypto.validator import CertificateValidator, CertificateValidatorOptions
+from asyncua.common.utils import ServiceError
 
+from heating_plant import security
 from heating_plant.model import HeatingPlant
 
 logging.getLogger("asyncua.common.instantiate_util").setLevel(logging.ERROR)  # type-attribute copy notes
@@ -177,21 +181,49 @@ async def build(server: Server) -> tuple[int, dict]:
     return idx, nodes
 
 
+async def _client_certificate_validator(trusted_dir: pathlib.Path):
+    """Accept a client certificate only if it is in the trust list, valid now, issued for a client and
+    for the application URI the client claims. An empty trust list rejects every client."""
+    if not any(trusted_dir.glob("*.der")) and not any(trusted_dir.glob("*.pem")):
+        async def reject_all(cert, app_description):
+            raise ServiceError(ua.StatusCodes.BadCertificateUntrusted)
+        return reject_all
+    store = TrustStore([trusted_dir], [])
+    await store.load()
+    return CertificateValidator(
+        CertificateValidatorOptions.TIME_RANGE | CertificateValidatorOptions.URI
+        | CertificateValidatorOptions.EXT_KEY_USAGE | CertificateValidatorOptions.TRUSTED
+        | CertificateValidatorOptions.PEER_CLIENT, store)
+
+
 def load_dwd() -> list[float]:
     with DWD_FILE.open() as f:
         return [float(r["t_outdoor_degC"]) for r in csv.DictReader(f)]
 
 
 async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: str = "dwd",
-              endpoint: str = ENDPOINT, ready: asyncio.Event | None = None) -> None:
+              endpoint: str = ENDPOINT, ready: asyncio.Event | None = None,
+              password: str | None = None, pki: pathlib.Path = security.PKI) -> None:
     """Run the twin and serve it.
     outdoor="dwd": replay the real Magdeburg week, one DWD hour every 3600/time_lapse s.
-    outdoor="manual": TI103.PV is only changed by OPC UA writes."""
-    server = Server()
+    outdoor="manual": TI103.PV is only changed by OPC UA writes.
+    password=None: no security (local demo only). Otherwise Basic256Sha256 SignAndEncrypt, trusted client
+    certificates only, username "operator" with this password."""
+    secure = password is not None
+    server = Server(user_manager=security.PasswordUserManager(security.USERNAME, password) if secure else None)
     await server.init()
     server.set_endpoint(endpoint)
     server.set_server_name("Heating plant twin (heating-plant-aas)")
-    server.set_security_policy([ua.SecurityPolicyType.NoSecurity])  # demo on localhost; see README
+    if secure:
+        cert, key = await security.ensure_certificate("server", security.SERVER_URI, server=True, pki=pki)
+        await server.set_application_uri(security.SERVER_URI)
+        await server.load_certificate(cert)
+        await server.load_private_key(key)
+        server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt])
+        server.set_identity_tokens([ua.UserNameIdentityToken])  # no anonymous login
+        server.set_certificate_validator(await _client_certificate_validator(pki / "trusted"))
+    else:
+        server.set_security_policy([ua.SecurityPolicyType.NoSecurity])  # local demo only; see README
     idx, n = await build(server)
     hours = load_dwd() if outdoor == "dwd" else None
     plant = HeatingPlant(t_outdoor=hours[0] if hours else 0.0)
@@ -245,9 +277,11 @@ if __name__ == "__main__":
     ap.add_argument("--outdoor", choices=["dwd", "manual"], default="dwd")
     ap.add_argument("--time-lapse", type=float, default=60.0, help="plant seconds per wall second")
     ap.add_argument("--export-nodeset", type=pathlib.Path)
+    ap.add_argument("--insecure", action="store_true", help="no encryption, no login (local demo only)")
     a = ap.parse_args()
     if a.export_nodeset:
         asyncio.run(export_nodeset(a.export_nodeset))
     else:
-        print(f"Serving {ENDPOINT}  (Ctrl+C to stop)")
-        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor))
+        pw = None if a.insecure else security.password_from_env()
+        print(f"Serving {ENDPOINT} ({'NO security' if a.insecure else 'Basic256Sha256 SignAndEncrypt, user operator'})")
+        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor, password=pw))

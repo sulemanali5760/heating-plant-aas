@@ -2,7 +2,10 @@
 import asyncio
 import pathlib
 
-from heating_plant.aid_client import read_interface, watch
+import secrets
+
+from heating_plant import security
+from heating_plant.aid_client import read_interface, read_interface_with_security, watch
 from heating_plant.opcua_server import POINTS, run
 
 AASX = pathlib.Path(__file__).resolve().parents[1] / "model/HeatingPlant.aasx"
@@ -15,18 +18,27 @@ def test_interface_read_from_aasx_only():
     assert {p.name for p in points} == {p.node_id for p in POINTS}
 
 
-async def _live():
+def test_security_read_from_aasx():
+    _, _, sec = read_interface_with_security(AASX)
+    assert (sec.mode, sec.policy, sec.user_token) == ("SignAndEncrypt", "Basic256Sha256", "UserName")
+
+
+async def _live(pki):
+    password = secrets.token_urlsafe(16)
+    cert, key = await security.ensure_certificate("client", security.CLIENT_URI, server=False, pki=pki / "client")
+    security.trust(cert, pki)
     ready = asyncio.Event()
-    srv = asyncio.create_task(run(seconds=12, time_lapse=600, outdoor="dwd", endpoint=PORT_ENDPOINT, ready=ready))
-    await asyncio.wait_for(ready.wait(), 10)
-    rows = await watch(AASX, seconds=4, endpoint_override=PORT_ENDPOINT)
+    srv = asyncio.create_task(run(seconds=15, time_lapse=600, outdoor="dwd", endpoint=PORT_ENDPOINT, ready=ready,
+                                  password=password, pki=pki))
+    await asyncio.wait_for(ready.wait(), 15)
+    rows = await watch(AASX, seconds=4, endpoint_override=PORT_ENDPOINT, cert=cert, key=key, password=password)
     srv.cancel()
     return rows
 
 
-def test_live_values_through_aid():
+def test_live_values_through_aid_over_secure_channel(tmp_path):
     try:
-        rows = asyncio.run(_live())
+        rows = asyncio.run(_live(tmp_path))
     except asyncio.CancelledError:
         return
     assert rows

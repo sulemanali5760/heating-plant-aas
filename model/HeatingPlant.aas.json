@@ -1403,7 +1403,44 @@
                           },
                           {
                             "type": "SubmodelElementCollection",
-                            "value": "nosec_sc"
+                            "value": "opcua_channel_sc"
+                          }
+                        ]
+                      },
+                      "modelType": "ReferenceElement"
+                    },
+                    {
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://www.w3.org/2019/wot/td#definesSecurityScheme"
+                          }
+                        ]
+                      },
+                      "value": {
+                        "type": "ModelReference",
+                        "keys": [
+                          {
+                            "type": "Submodel",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/sm/AssetInterfacesDescription"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "InterfaceOPCUA"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "EndpointMetadata"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "securityDefinitions"
+                          },
+                          {
+                            "type": "SubmodelElementCollection",
+                            "value": "opcua_authentication_sc"
                           }
                         ]
                       },
@@ -1425,31 +1462,19 @@
                   },
                   "value": [
                     {
-                      "idShort": "nosec_sc",
-                      "description": [
-                        {
-                          "language": "en",
-                          "text": "No security scheme definition"
-                        }
-                      ],
+                      "idShort": "opcua_channel_sc",
                       "semanticId": {
                         "type": "ExternalReference",
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://www.w3.org/2019/wot/security#NoSecurityScheme"
+                            "value": "http://opcfoundation.org/UA/WoT-Binding/OPCUASecurityChannelScheme"
                           }
                         ]
                       },
                       "value": [
                         {
                           "idShort": "scheme",
-                          "description": [
-                            {
-                              "language": "en",
-                              "text": "Defines the security mechanism that used during access. Supported modes one of nosec, basic, digest, bearer, psk, oauth2, apikey, combo, auto, uav_channelsec and uav_authentication_"
-                            }
-                          ],
                           "semanticId": {
                             "type": "ExternalReference",
                             "keys": [
@@ -1460,8 +1485,83 @@
                             ]
                           },
                           "valueType": "xs:string",
-                          "value": "nosec",
+                          "value": "uav_channelsec",
                           "modelType": "Property"
+                        },
+                        {
+                          "idShort": "uav_securityMode",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "http://opcfoundation.org/UA/WoT-Binding/securityMode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "SignAndEncrypt"
+                        },
+                        {
+                          "idShort": "uav_securityPolicy",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "http://opcfoundation.org/UA/WoT-Binding/securityPolicy"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Basic256Sha256"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "opcua_authentication_sc",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "http://opcfoundation.org/UA/WoT-Binding/OPCUASecurityAuthenticationScheme"
+                          }
+                        ]
+                      },
+                      "value": [
+                        {
+                          "idShort": "scheme",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/security#SecurityScheme"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "uav_authentication",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "uav_userIdentityToken",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "http://opcfoundation.org/UA/WoT-Binding/userIdentityToken"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "UserName"
                         }
                       ],
                       "modelType": "SubmodelElementCollection"

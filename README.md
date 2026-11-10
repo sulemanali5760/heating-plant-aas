@@ -28,7 +28,8 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | Plant twin | `heating_plant/model.py` | Port of `FC_Heizkurve` and `FB_StreckeVorlauf` from the PLC project; 2-DOF PIDT1 as documented for PID_Compact |
 | OPC UA server | `heating_plant/opcua_server.py`, `model/HeatingPlant.NodeSet2.xml` | Own ObjectTypes (`HeatingPlantType`, `TemperatureControlLoopType`, `TemperatureIndicatorType`, `HeatingCurveType`) with mandatory members (OPC 10000-3); values as AnalogItemType with EURange and EngineeringUnits (OPC 10000-8), UNECE Rec. 20 units |
 | AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description, IDTA 02008-1-1 Time Series Data (the Magdeburg week, 168 hourly records) |
-| AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…` and `uav:browsePath` (OPC 10101 WoT binding) |
+| AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…`, `uav:browsePath`, and security from `uav:channelsec` / `uav:authentication` (OPC 10101 WoT binding) |
+| Security | `heating_plant/security.py` | OPC UA Basic256Sha256, SignAndEncrypt, X.509 application certificates with trust list, UserName token (OPC 10000-2/-4/-7); password checked as PBKDF2-HMAC-SHA256 hash |
 
 ## How it is validated
 
@@ -42,6 +43,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | AAS files | IDTA `aas-test-engines` (metamodel, constraints, AASX package) | pass |
 | AAS submodels | Element by element against the official IDTA template JSON (mandatory elements, semantic IDs) | pass |
 | AID | Every `href` and browse path resolves to the same node on the live server | pass |
+| Security | Basic256Sha256 SignAndEncrypt + UserName: trusted client reads; no encryption, wrong password, untrusted certificate are each refused | pass |
 
 The PLCSIM values come from the author's TIA Portal V19 project (commissioned 25 Sep 2026). Every number in this repository is traced in [SOURCES.md](SOURCES.md) as measured, standard/datasheet, design decision, or assumption.
 
@@ -49,16 +51,18 @@ The PLCSIM values come from the author's TIA Portal V19 project (commissioned 25
 
 ```bash
 python -m venv .venv && .venv/Scripts/pip install -r requirements.txt   # Linux/macOS: .venv/bin/pip
-python -m heating_plant.opcua_server --outdoor dwd --time-lapse 600    # replays the Magdeburg week, 1 h = 6 s
+export HEATING_PLANT_PASSWORD=...                                       # Windows: set HEATING_PLANT_PASSWORD=...
+python -c "import asyncio;from heating_plant import security as s;c,_=asyncio.run(s.ensure_certificate('client',s.CLIENT_URI,False));s.trust(c)"
+python -m heating_plant.opcua_server --outdoor dwd --time-lapse 600    # secure server; replays the Magdeburg week, 1 h = 6 s
 python -m heating_plant.aid_client model/HeatingPlant.aasx 30           # second terminal: connects using only the AAS
 python -m pytest                                                        # all checks
 ```
 
-`--outdoor manual` makes `TI103.PV` writable from any OPC UA client (e.g. UaExpert), so you can change the weather by hand and watch the loop react.
+The second line creates the client certificate and puts it into the server's trust list, the step an administrator does once. Certificates live in `pki/` (git-ignored); the password is only read from the environment. `--insecure` starts a local demo without encryption or login, and `--outdoor manual` makes `TI103.PV` writable from any OPC UA client (e.g. UaExpert), so you can change the weather by hand.
 
 ## Limits (on purpose)
 
-- **Security:** the server runs `None` security on localhost for the demo. A plant network needs Sign & Encrypt and user authentication.
+- **Certificates are self-signed.** A plant would use certificates from its own CA (OPC UA GDS or company PKI) and certificate revocation lists.
 - **PID_Compact** is reproduced from its documented structure. Siemens-internal details are not public, so the dynamic test uses tolerances.
 - **Technical Data properties** use concept descriptions defined in this repo, because no ECLASS/IEC CDD properties could be verified free of charge for these quantities.
 - **One loop:** the network-pump Δp loop (PDIC301) of the PLC project is not in the twin yet.

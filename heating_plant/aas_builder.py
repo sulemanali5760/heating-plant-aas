@@ -197,17 +197,28 @@ def asset_interfaces() -> dict:
     t = AID
     itf = find(t, "InterfaceTemplateForOPCUA")
     ep = find(t, "InterfaceTemplateForOPCUA", "EndpointMetadata")
-    nosec_tpl = find(t, "InterfaceTemplateForOPCUA", "EndpointMetadata", "securityDefinitions", "nosec_sc")
-    sec_ref_path = [("Submodel", SM_IDS["AssetInterfacesDescription"]), ("SubmodelElementCollection", "InterfaceOPCUA"),
-                    ("SubmodelElementCollection", "EndpointMetadata"),
-                    ("SubmodelElementCollection", "securityDefinitions"), ("SubmodelElementCollection", "nosec_sc")]
-    sec_ref = _clean(find(t, "InterfaceTemplateForOPCUA", "EndpointMetadata", "security", "[]"))
-    sec_ref["value"] = {"type": "ModelReference", "keys": [{"type": k, "value": v} for k, v in sec_ref_path]}
+    sd = find(ep, "securityDefinitions")
+    chan_tpl, auth_tpl = find(sd, "opcua_channel_sc"), find(sd, "opcua_authentication_sc")
+    # Values as defined in OPC 10101 (uav:securityMode / uav:securityPolicy / uav:userIdentityToken)
+    channel = coll(chan_tpl, [prop(find(chan_tpl, "scheme"), "uav_channelsec"),
+                              prop(find(chan_tpl, "uav_securityMode"), "SignAndEncrypt"),
+                              prop(find(chan_tpl, "uav_securityPolicy"), "Basic256Sha256")])
+    auth = coll(auth_tpl, [prop(find(auth_tpl, "scheme"), "uav_authentication"),
+                           prop(find(auth_tpl, "uav_userIdentityToken"), "UserName")])
+
+    def sec_ref(name: str) -> dict:
+        path = [("Submodel", SM_IDS["AssetInterfacesDescription"]), ("SubmodelElementCollection", "InterfaceOPCUA"),
+                ("SubmodelElementCollection", "EndpointMetadata"),
+                ("SubmodelElementCollection", "securityDefinitions"), ("SubmodelElementCollection", name)]
+        r = _clean(find(ep, "security", "[]"))
+        r["value"] = {"type": "ModelReference", "keys": [{"type": k, "value": v} for k, v in path]}
+        return r
+
     endpoint = coll(ep, [
         prop(find(ep, "base"), ENDPOINT),
         prop(find(ep, "contentType"), "application/octet-stream"),
-        coll(find(ep, "security"), [sec_ref]),
-        coll(find(ep, "securityDefinitions"), [coll(nosec_tpl, [prop(find(nosec_tpl, "scheme"), "nosec")])]),
+        coll(find(ep, "security"), [sec_ref("opcua_channel_sc"), sec_ref("opcua_authentication_sc")]),  # both apply
+        coll(sd, [channel, auth]),
     ])
     pn = find(itf, "InteractionMetadata", "properties", "property_name")
     forms_tpl = find(pn, "forms")

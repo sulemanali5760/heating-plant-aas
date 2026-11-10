@@ -13,7 +13,10 @@ from dataclasses import dataclass
 
 from asyncua import Client, ua
 from basyx.aas import model
+from asyncua.crypto import security_policies
 from basyx.aas.adapter import aasx
+
+from heating_plant.security import CLIENT_URI, USERNAME
 
 AID_SEMANTIC_ID = "https://admin-shell.io/idta/AssetInterfacesDescription/1/2/Submodel"
 OPCUA_BINDING = "http://opcfoundation.org/UA/WoT-Binding/"
@@ -36,7 +39,31 @@ def _val(coll, id_short):
     return coll.get_referable(id_short).value
 
 
+@dataclass
+class Security:
+    """From the AID securityDefinitions (OPC 10101 terms). Empty strings = no such requirement."""
+    mode: str = ""          # uav_securityMode, e.g. SignAndEncrypt
+    policy: str = ""        # uav_securityPolicy, e.g. Basic256Sha256
+    user_token: str = ""    # uav_userIdentityToken, e.g. UserName
+
+
+def read_security(itf) -> Security:
+    sec = Security()
+    for d in itf.get_referable("EndpointMetadata").get_referable("securityDefinitions").value:
+        scheme = _val(d, "scheme")
+        if scheme == "uav_channelsec":
+            sec.mode, sec.policy = _val(d, "uav_securityMode"), _val(d, "uav_securityPolicy")
+        elif scheme == "uav_authentication":
+            sec.user_token = _val(d, "uav_userIdentityToken")
+    return sec
+
+
 def read_interface(aasx_path: pathlib.Path) -> tuple[str, list[Datapoint]]:
+    base, points, _ = read_interface_with_security(aasx_path)
+    return base, points
+
+
+def read_interface_with_security(aasx_path: pathlib.Path) -> tuple[str, list[Datapoint], Security]:
     store, files = model.DictIdentifiableStore(), aasx.DictSupplementaryFileContainer()
     with aasx.AASXReader(str(aasx_path)) as r:
         r.read_into(store, files)
@@ -49,7 +76,24 @@ def read_interface(aasx_path: pathlib.Path) -> tuple[str, list[Datapoint]]:
         href = _val(p.get_referable("forms"), "href")
         nsu, sid = href.split(";s=", 1)
         points.append(Datapoint(_val(p, "key"), _val(p, "title"), _val(p, "unit"), nsu.removeprefix("nsu="), sid))
-    return base, points
+    return base, points, read_security(itf)
+
+
+async def _apply_security(c: Client, sec: Security, cert, key, password) -> None:
+    """Configure the client exactly as the AID demands; refuse to guess."""
+    if sec.mode and sec.mode != "None":
+        policy = getattr(security_policies, f"SecurityPolicy{sec.policy}", None)
+        if policy is None:
+            raise ValueError(f"AID asks for unsupported security policy {sec.policy}")
+        if cert is None or key is None:
+            raise ValueError("AID requires a secure channel: client certificate and key needed")
+        c.application_uri = CLIENT_URI
+        await c.set_security(policy, str(cert), str(key), mode=ua.MessageSecurityMode[sec.mode])
+    if sec.user_token == "UserName":
+        if password is None:
+            raise ValueError("AID requires UserName login: password needed")
+        c.set_user(USERNAME)
+        c.set_password(password)
 
 
 class _Recorder:
@@ -61,12 +105,16 @@ class _Recorder:
 
 
 async def watch(aasx_path: pathlib.Path, seconds: float, out_csv: pathlib.Path | None = None,
-                endpoint_override: str | None = None, period: float = 0.5) -> list[dict]:
-    base, points = read_interface(aasx_path)
+                endpoint_override: str | None = None, period: float = 0.5,
+                cert=None, key=None, password: str | None = None) -> list[dict]:
+    base, points, sec = read_interface_with_security(aasx_path)
     endpoint = endpoint_override or base
-    print(f"AAS says: OPC UA endpoint {base}, {len(points)} datapoints")
+    print(f"AAS says: OPC UA endpoint {base}, {len(points)} datapoints, "
+          f"security {sec.policy or 'None'} {sec.mode or ''}, login {sec.user_token or 'Anonymous'}")
     rows = []
-    async with Client(endpoint) as c:
+    client = Client(endpoint)
+    await _apply_security(client, sec, cert, key, password)
+    async with client as c:
         rec = _Recorder([p.name for p in points])
         rec.by_node = {}
         nodes = []
@@ -96,6 +144,13 @@ async def watch(aasx_path: pathlib.Path, seconds: float, out_csv: pathlib.Path |
     return rows
 
 
+async def _main(path: pathlib.Path, seconds: float) -> None:
+    from heating_plant import security
+    cert, key = await security.ensure_certificate("client", security.CLIENT_URI, server=False)
+    await watch(path, seconds, cert=cert, key=key, password=security.password_from_env())
+
+
 if __name__ == "__main__":
+    # First run creates pki/client_cert.der; copy it into pki/trusted/ (security.trust) before the server starts.
     path = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "model/HeatingPlant.aasx")
-    asyncio.run(watch(path, seconds=float(sys.argv[2]) if len(sys.argv) > 2 else 10))
+    asyncio.run(_main(path, float(sys.argv[2]) if len(sys.argv) > 2 else 10))

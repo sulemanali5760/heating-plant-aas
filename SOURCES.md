@@ -54,7 +54,11 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Signal names TIC101, TI102, TI103, TV101 | [D] | `heizzentrale-tia/docs/EMSR_Stellenliste.csv` (tags per IEC 62424 style) |
 | Ranges 0…120 °C, −30…+50 °C, 0…100 % | [D] | EMSR list, column "Messbereich" |
 | href format `nsu=<namespace>;s=<id>` | [S] | OPC 10101 OPC UA for WoT Binding, 6.1 (reference.opcfoundation.org/specs/OPC-10101/6.1) |
-| Security "None", localhost only | [A] | Demo on one PC. A plant network needs Sign&Encrypt (Basic256Sha256) and user tokens. |
+| Security policy Basic256Sha256, mode SignAndEncrypt, UserName token | [S] | OPC 10000-7 (profiles), OPC 10000-4 (ActivateSession, identity tokens); value names as in OPC 10101, 6.3.3 (uav:securityMode, uav:securityPolicy, uav:userIdentityToken) |
+| Certificate checks: time range, application URI, extended key usage, trust list | [S] | OPC 10000-4, 6.1.3 certificate validation; asyncua CertificateValidator |
+| Password storage: PBKDF2-HMAC-SHA256, 200 000 iterations, 16-byte salt, constant-time compare | [S] | NIST SP 800-132; Python `hashlib.pbkdf2_hmac`, `hmac.compare_digest` |
+| Self-signed certificates | [A] | Demo; a plant uses its own CA / OPC UA GDS. |
+| `--insecure` mode | [A] | Local demo only; secure is the default. |
 
 ## Software (versions pinned in `requirements.txt`, checked 10 Nov 2026)
 
