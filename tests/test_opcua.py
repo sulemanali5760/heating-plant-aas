@@ -28,11 +28,11 @@ async def _scenario():
             assert eu.NamespaceUri == "http://www.opcfoundation.org/UA/units/un/cefact"
 
         # Objects are typed with this namespace's ObjectTypes
-        for obj, tname in [("HeatingPlant", "HeatingPlantType"), ("TIC101", "TemperatureControlLoopType"),
+        for obj, tname in [("HeatingPlant", "HeatingPlantType"), ("TIC101", "ControlLoopType"), ("PDIC301", "ControlLoopType"), ("Simulation", "SimulationInputsType"),
                            ("TI102", "TemperatureIndicatorType"), ("TI103", "TemperatureIndicatorType"),
                            ("HeatingCurve", "HeatingCurveType")]:
             assert await node(obj).read_type_definition() == ua.NodeId(tname, idx), obj
-        loop_type = node("TemperatureControlLoopType")
+        loop_type = node("ControlLoopType")
         members = {(await m.read_browse_name()).Name for m in await loop_type.get_children()}
         assert {"SP", "PV", "OP"} <= members
 
@@ -40,19 +40,22 @@ async def _scenario():
         pv = await c.nodes.objects.get_child([f"{idx}:HeatingPlant", f"{idx}:TIC101", f"{idx}:PV"])
         assert pv.nodeid == ua.NodeId("TIC101.PV", idx)
 
-        # Read-only measured value cannot be written
-        try:
-            await node("TIC101.PV").write_value(99.0)
-            raise AssertionError("TIC101.PV must be read-only")
-        except ua.UaStatusCodeError:
-            pass
+        # Measured values are read-only, the outdoor temperature included
+        for ro in ("TIC101.PV", "TI103.PV", "PDIC301.PV"):
+            try:
+                await node(ro).write_value(ua.DataValue(ua.Variant(99.0, ua.VariantType.Double)))
+                raise AssertionError(f"{ro} must be read-only")
+            except ua.UaStatusCodeError:
+                pass
 
         # Drive the plant: outdoor -12 °C -> setpoint 58.4 °C (heating curve, test 0b)
-        await node("TI103.PV").write_value(ua.DataValue(ua.Variant(-12.0, ua.VariantType.Double)))
+        await node("Simulation.OutdoorTemperature").write_value(ua.DataValue(ua.Variant(-12.0, ua.VariantType.Double)))
         await asyncio.sleep(1.0)
         assert abs(await node("TIC101.SP").read_value() - 58.4) < 1e-6
         valve = await node("TIC101.OP").read_value()
         assert 0.0 <= valve <= 100.0
+        assert await node("TI103.PV").read_value() == -12.0  # indication follows the simulated weather
+        assert abs(await node("PDIC301.SP").read_value() - 1.0) < 1e-9
     server.cancel()
 
 

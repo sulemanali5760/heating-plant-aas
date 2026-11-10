@@ -22,14 +22,14 @@
       <Reference ReferenceType="HasComponent">ns=1;s=TemperatureIndicatorType.PV</Reference>
     </References>
   </UAObjectType>
-  <UAObjectType NodeId="ns=1;s=TemperatureControlLoopType" BrowseName="1:TemperatureControlLoopType">
-    <DisplayName>TemperatureControlLoopType</DisplayName>
-    <Description>TemperatureControlLoopType</Description>
+  <UAObjectType NodeId="ns=1;s=ControlLoopType" BrowseName="1:ControlLoopType">
+    <DisplayName>ControlLoopType</DisplayName>
+    <Description>ControlLoopType</Description>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.SP</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.PV</Reference>
-      <Reference ReferenceType="HasComponent">ns=1;s=TemperatureControlLoopType.OP</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=ControlLoopType.SP</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=ControlLoopType.PV</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=ControlLoopType.OP</Reference>
     </References>
   </UAObjectType>
   <UAObjectType NodeId="ns=1;s=HeatingCurveType" BrowseName="1:HeatingCurveType">
@@ -42,6 +42,15 @@
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurveType.FlowMax</Reference>
     </References>
   </UAObjectType>
+  <UAObjectType NodeId="ns=1;s=SimulationInputsType" BrowseName="1:SimulationInputsType">
+    <DisplayName>SimulationInputsType</DisplayName>
+    <Description>SimulationInputsType</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=SimulationInputsType.OutdoorTemperature</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=SimulationInputsType.ConsumerLoad</Reference>
+    </References>
+  </UAObjectType>
   <UAObjectType NodeId="ns=1;s=HeatingPlantType" BrowseName="1:HeatingPlantType">
     <DisplayName>HeatingPlantType</DisplayName>
     <Description>HeatingPlantType</Description>
@@ -50,7 +59,9 @@
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TIC101</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TI102</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.TI103</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.PDIC301</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.HeatingCurve</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=HeatingPlantType.Simulation</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=1;s=HeatingPlant" BrowseName="1:HeatingPlant" ParentNodeId="i=85">
@@ -62,7 +73,9 @@
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI102</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TI103</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=PDIC301</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=Simulation</Reference>
     </References>
   </UAObject>
   <UAObject NodeId="ns=1;s=TIC101" BrowseName="1:TIC101" ParentNodeId="ns=1;s=HeatingPlant">
@@ -70,7 +83,7 @@
     <Description>Flow temperature control loop (heating curve -&gt; PID -&gt; mixing valve)</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=ControlLoopType</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.SP</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.PV</Reference>
       <Reference ReferenceType="HasComponent">ns=1;s=TIC101.OP</Reference>
@@ -94,6 +107,17 @@
       <Reference ReferenceType="HasComponent">ns=1;s=TI103.PV</Reference>
     </References>
   </UAObject>
+  <UAObject NodeId="ns=1;s=PDIC301" BrowseName="1:PDIC301" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>PDIC301</DisplayName>
+    <Description>Network differential pressure loop (PI -&gt; pump speed P301)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=ControlLoopType</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=PDIC301.SP</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=PDIC301.PV</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=PDIC301.OP</Reference>
+    </References>
+  </UAObject>
   <UAObject NodeId="ns=1;s=HeatingCurve" BrowseName="1:HeatingCurve" ParentNodeId="ns=1;s=HeatingPlant">
     <DisplayName>HeatingCurve</DisplayName>
     <Description>HeatingCurve</Description>
@@ -105,6 +129,32 @@
       <Reference ReferenceType="HasComponent">ns=1;s=HeatingCurve.FlowMax</Reference>
     </References>
   </UAObject>
+  <UAObject NodeId="ns=1;s=Simulation" BrowseName="1:Simulation" ParentNodeId="ns=1;s=HeatingPlant">
+    <DisplayName>Simulation</DisplayName>
+    <Description>Inputs that replace the real world in the twin; not plant signals</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlant</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=SimulationInputsType</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=Simulation.OutdoorTemperature</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;s=Simulation.ConsumerLoad</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=Simulation.OutdoorTemperature" BrowseName="1:OutdoorTemperature" ParentNodeId="ns=1;s=Simulation" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>OutdoorTemperature</DisplayName>
+    <Description>Outdoor temperature used in manual mode (°C)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=Simulation</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=Simulation.ConsumerLoad" BrowseName="1:ConsumerLoad" ParentNodeId="ns=1;s=Simulation" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+    <DisplayName>ConsumerLoad</DisplayName>
+    <Description>Opening of all consumer valves (%), drives the pump load</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=Simulation</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+    </References>
+  </UAVariable>
   <UAVariable NodeId="ns=1;s=HeatingCurve.Slope" BrowseName="1:Slope" ParentNodeId="ns=1;s=HeatingCurve" DataType="Double" AccessLevel="3" UserAccessLevel="3">
     <DisplayName>Slope</DisplayName>
     <Description>Heating curve slope (-)</Description>
@@ -129,7 +179,82 @@
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TI103.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TI103" DataType="Double" AccessLevel="3" UserAccessLevel="3">
+  <UAVariable NodeId="ns=1;s=PDIC301.SP" BrowseName="1:SP" ParentNodeId="ns=1;s=PDIC301" DataType="Double">
+    <DisplayName>SP</DisplayName>
+    <Description>Network differential pressure setpoint</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PDIC301</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.SP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.SP.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=PDIC301" DataType="Double">
+    <DisplayName>PV</DisplayName>
+    <Description>Network differential pressure at the consumers (PDT301)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PDIC301</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.PV.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.PV.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.OP" BrowseName="1:OP" ParentNodeId="ns=1;s=PDIC301" DataType="Double">
+    <DisplayName>OP</DisplayName>
+    <Description>Speed setpoint of network pump P301 (SC301)</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PDIC301</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.OP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=PDIC301.OP.EngineeringUnits</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.OP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=PDIC301.OP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.OP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.OP.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=PDIC301.OP" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.OP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=PDIC301.PV" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.PV.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=PDIC301.PV" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.PV</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.SP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=PDIC301.SP" DataType="Range">
+    <DisplayName>EURange</DisplayName>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=PDIC301.SP.EngineeringUnits" BrowseName="0:EngineeringUnits" ParentNodeId="ns=1;s=PDIC301.SP" DataType="EUInformation">
+    <DisplayName>EngineeringUnits</DisplayName>
+    <Description>EngineeringUnits</Description>
+    <References>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PDIC301.SP</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TI103.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TI103" DataType="Double">
     <DisplayName>PV</DisplayName>
     <Description>Outdoor temperature (heating-curve input)</Description>
     <References>
@@ -259,7 +384,7 @@
     <Description>TIC101</Description>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
-      <Reference ReferenceType="HasTypeDefinition">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=ControlLoopType</Reference>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAObject>
@@ -281,6 +406,15 @@
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.PDIC301" BrowseName="1:PDIC301" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>PDIC301</DisplayName>
+    <Description>PDIC301</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=ControlLoopType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
   <UAObject NodeId="ns=1;s=HeatingPlantType.HeatingCurve" BrowseName="1:HeatingCurve" ParentNodeId="ns=1;s=HeatingPlantType">
     <DisplayName>HeatingCurve</DisplayName>
     <Description>HeatingCurve</Description>
@@ -290,6 +424,33 @@
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAObject>
+  <UAObject NodeId="ns=1;s=HeatingPlantType.Simulation" BrowseName="1:Simulation" ParentNodeId="ns=1;s=HeatingPlantType">
+    <DisplayName>Simulation</DisplayName>
+    <Description>Simulation</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=HeatingPlantType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;s=SimulationInputsType</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=SimulationInputsType.OutdoorTemperature" BrowseName="1:OutdoorTemperature" ParentNodeId="ns=1;s=SimulationInputsType" DataType="Double">
+    <DisplayName>OutdoorTemperature</DisplayName>
+    <Description>OutdoorTemperature</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimulationInputsType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimulationInputsType.ConsumerLoad" BrowseName="1:ConsumerLoad" ParentNodeId="ns=1;s=SimulationInputsType" DataType="Double">
+    <DisplayName>ConsumerLoad</DisplayName>
+    <Description>ConsumerLoad</Description>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimulationInputsType</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+    </References>
+  </UAVariable>
   <UAVariable NodeId="ns=1;s=HeatingCurveType.Slope" BrowseName="1:Slope" ParentNodeId="ns=1;s=HeatingCurveType" DataType="Double">
     <DisplayName>Slope</DisplayName>
     <Description>Slope</Description>
@@ -317,51 +478,51 @@
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.SP" BrowseName="1:SP" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.SP" BrowseName="1:SP" ParentNodeId="ns=1;s=ControlLoopType" DataType="Double">
     <DisplayName>SP</DisplayName>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=ControlLoopType</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.SP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=ControlLoopType.SP.EURange</Reference>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.PV" BrowseName="1:PV" ParentNodeId="ns=1;s=ControlLoopType" DataType="Double">
     <DisplayName>PV</DisplayName>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=ControlLoopType</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.PV.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=ControlLoopType.PV.EURange</Reference>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.OP" BrowseName="1:OP" ParentNodeId="ns=1;s=TemperatureControlLoopType" DataType="Double">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.OP" BrowseName="1:OP" ParentNodeId="ns=1;s=ControlLoopType" DataType="Double">
     <DisplayName>OP</DisplayName>
     <References>
-      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=TemperatureControlLoopType</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=ControlLoopType</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=2368</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;s=TemperatureControlLoopType.OP.EURange</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;s=ControlLoopType.OP.EURange</Reference>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.OP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.OP" DataType="Range">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.OP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=ControlLoopType.OP" DataType="Range">
     <DisplayName>EURange</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.OP</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=ControlLoopType.OP</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.PV" DataType="Range">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.PV.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=ControlLoopType.PV" DataType="Range">
     <DisplayName>EURange</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.PV</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=ControlLoopType.PV</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;s=TemperatureControlLoopType.SP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=TemperatureControlLoopType.SP" DataType="Range">
+  <UAVariable NodeId="ns=1;s=ControlLoopType.SP.EURange" BrowseName="0:EURange" ParentNodeId="ns=1;s=ControlLoopType.SP" DataType="Range">
     <DisplayName>EURange</DisplayName>
     <References>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=TemperatureControlLoopType.SP</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=ControlLoopType.SP</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
     </References>
   </UAVariable>

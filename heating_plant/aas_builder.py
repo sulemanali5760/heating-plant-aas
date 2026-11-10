@@ -136,6 +136,14 @@ TECH = [
     ("ControllerTIC101", "DerivativeTime", "xs:double", Pid2Dof.td, "s", "PID_Compact derivative time after fine tuning", "[M] commissioning test 4"),
     ("ControllerTIC101", "ProportionalWeighting", "xs:double", Pid2Dof.b, "-", "Setpoint weighting b of the P part", "[M] commissioning test 4"),
     ("ControllerTIC101", "SampleTime", "xs:double", Pid2Dof.ts, "s", "PID algorithm sample time", "[M] commissioning test 4"),
+    ("NetworkPumpP301", "ShutOffHead", "xs:double", 2.2, "bar", "Pump differential pressure at zero flow and 100 % speed", "[D] FB_ModellNetz.iDpNull"),
+    ("NetworkPumpP301", "ConsumerKvMax", "xs:double", 13.7, "m³/h", "Kv of all consumer valves fully open (flow at 1 bar)", "[D] FB_ModellNetz.iKvMax"),
+    ("NetworkPumpP301", "DesignFlow", "xs:double", 15.0, "m³/h", "Flow at 100 % speed, all valves open", "[D] FB_ModellNetz design note"),
+    ("ControllerPDIC301", "DifferentialPressureSetpoint", "xs:double", 1.0, "bar", "Setpoint of the network differential pressure", "[D] DB_Netz.dpSoll"),
+    ("ControllerPDIC301", "ProportionalGain", "xs:double", 119.3, "%/bar", "PI gain after fine tuning (PI chosen over PID: noisy dp signal)", "[M] commissioning 2 Oct 2026"),
+    ("ControllerPDIC301", "IntegralTime", "xs:double", 2.72, "s", "PI integral time after fine tuning", "[M] commissioning 2 Oct 2026"),
+    ("NetworkPumpP301", "HeatingLimit", "xs:double", 15.0, "°C", "Pump released below this outdoor temperature (1 K hysteresis)", "[D] FB_Netzpumpe.iHeizgrenze"),
+    ("NetworkPumpP301", "FrostLimit", "xs:double", 3.0, "°C", "Pump always runs below this outdoor temperature", "[D] FB_Netzpumpe.iFrostgrenze"),
     ("Controller", "CPU", "xs:string", "SIMATIC S7-1500 CPU 1511-1 PN (PLCSIM)", "", "PLC the control program is commissioned on", "[D] TIA project hardware configuration"),
     ("Controller", "CycleTime", "xs:double", 0.1, "s", "Cyclic interrupt OB30 period", "[D] OB30"),
 ]
@@ -147,9 +155,9 @@ def _cd_id(id_short: str) -> str:
 
 def concept_descriptions() -> list:
     return [{
-        "id": _cd_id(i), "idShort": i, "modelType": "ConceptDescription",
+        "id": _cd_id(f"{sec}/{i}"), "idShort": f"{sec}_{i}", "modelType": "ConceptDescription",
         "description": [{"language": "en", "text": f"{d}. Unit: {u or 'none'}. Source: {s}."}],
-    } for _, i, _, _, u, d, s in TECH]
+    } for sec, i, _, _, u, d, s in TECH]
 
 
 def technical_data() -> dict:
@@ -167,7 +175,8 @@ def technical_data() -> dict:
     for sec, i, vt, v, u, d, s in TECH:
         p = prop(arb_tpl, v, id_short=i)
         p["valueType"] = vt
-        p["semanticId"] = {"type": "ExternalReference", "keys": [{"type": "GlobalReference", "value": _cd_id(i)}]}
+        p["semanticId"] = {"type": "ExternalReference",
+                           "keys": [{"type": "GlobalReference", "value": _cd_id(f"{sec}/{i}")}]}
         p.pop("supplementalSemanticIds", None)
         p["description"] = [{"language": "en", "text": f"{d} [{u or '-'}]"}]
         sections.setdefault(sec, []).append(p)

@@ -45,6 +45,8 @@ UNITS = {
     "CEL": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("CEL"),
                             DisplayName=ua.LocalizedText("°C"),
                             Description=ua.LocalizedText("degree Celsius")),
+    "BAR": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("BAR"),
+                            DisplayName=ua.LocalizedText("bar"), Description=ua.LocalizedText("bar")),
     "P1": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("P1"),
                            DisplayName=ua.LocalizedText("%"),
                            Description=ua.LocalizedText("percent")),
@@ -64,13 +66,22 @@ class Point:
     writable: bool = False
 
 
-# Ranges: EMSR list (TIC101/TI102 0..120 °C, TI103 -30..+50 °C, TV101 0..100 %).
+# Ranges: EMSR list (TIC101/TI102 0..120 °C, TI103 -30..+50 °C, TV101 0..100 %, PDIC301 0..2.5 bar,
+# SC301 0..100 %). All measured values are read-only; simulation inputs live in the Simulation object.
 POINTS = [
     Point("TIC101.SP", "TIC101", "SP", "Flow temperature setpoint from the heating curve", "CEL", 0, 120),
     Point("TIC101.PV", "TIC101", "PV", "Flow temperature after mixing valve (TI101)", "CEL", 0, 120),
     Point("TIC101.OP", "TIC101", "OP", "Mixing valve TV101 position (controller output)", "P1", 0, 100),
     Point("TI102.PV", "TI102", "PV", "Return temperature", "CEL", 0, 120),
-    Point("TI103.PV", "TI103", "PV", "Outdoor temperature (heating-curve input)", "CEL", -30, 50, writable=True),
+    Point("TI103.PV", "TI103", "PV", "Outdoor temperature (heating-curve input)", "CEL", -30, 50),
+    Point("PDIC301.SP", "PDIC301", "SP", "Network differential pressure setpoint", "BAR", 0, 2.5),
+    Point("PDIC301.PV", "PDIC301", "PV", "Network differential pressure at the consumers (PDT301)", "BAR", 0, 2.5),
+    Point("PDIC301.OP", "PDIC301", "OP", "Speed setpoint of network pump P301 (SC301)", "P1", 0, 100),
+]
+SIMULATION = [
+    # node_id, browse name, description, default: inputs that replace the real world in the twin
+    ("Simulation.OutdoorTemperature", "OutdoorTemperature", "Outdoor temperature used in manual mode (°C)", 0.0),
+    ("Simulation.ConsumerLoad", "ConsumerLoad", "Opening of all consumer valves (%), drives the pump load", 50.0),
 ]
 PARAMETERS = [
     # node_id, browse name, description, default
@@ -103,18 +114,23 @@ async def _build_types(server: Server, idx: int) -> dict:
     t["TemperatureIndicatorType"] = await base.add_object_type(ua.NodeId("TemperatureIndicatorType", idx),
                                                                ua.QualifiedName("TemperatureIndicatorType", idx))
     await _type_member(server, t["TemperatureIndicatorType"], idx, "TemperatureIndicatorType", "PV", True)
-    t["TemperatureControlLoopType"] = await base.add_object_type(ua.NodeId("TemperatureControlLoopType", idx),
-                                                                 ua.QualifiedName("TemperatureControlLoopType", idx))
+    t["ControlLoopType"] = await base.add_object_type(ua.NodeId("ControlLoopType", idx),
+                                                      ua.QualifiedName("ControlLoopType", idx))
     for m in ("SP", "PV", "OP"):
-        await _type_member(server, t["TemperatureControlLoopType"], idx, "TemperatureControlLoopType", m, True)
+        await _type_member(server, t["ControlLoopType"], idx, "ControlLoopType", m, True)
+    t["SimulationInputsType"] = await base.add_object_type(ua.NodeId("SimulationInputsType", idx),
+                                                           ua.QualifiedName("SimulationInputsType", idx))
+    for _, bn, _, _ in SIMULATION:
+        await _type_member(server, t["SimulationInputsType"], idx, "SimulationInputsType", bn, False)
     t["HeatingCurveType"] = await base.add_object_type(ua.NodeId("HeatingCurveType", idx),
                                                        ua.QualifiedName("HeatingCurveType", idx))
     for _, bn, _, _ in PARAMETERS:
         await _type_member(server, t["HeatingCurveType"], idx, "HeatingCurveType", bn, False)
     t["HeatingPlantType"] = await base.add_object_type(ua.NodeId("HeatingPlantType", idx),
                                                        ua.QualifiedName("HeatingPlantType", idx))
-    for name, tname in [("TIC101", "TemperatureControlLoopType"), ("TI102", "TemperatureIndicatorType"),
-                        ("TI103", "TemperatureIndicatorType"), ("HeatingCurve", "HeatingCurveType")]:
+    for name, tname in [("TIC101", "ControlLoopType"), ("TI102", "TemperatureIndicatorType"),
+                        ("TI103", "TemperatureIndicatorType"), ("PDIC301", "ControlLoopType"),
+                        ("HeatingCurve", "HeatingCurveType"), ("Simulation", "SimulationInputsType")]:
         o = await t["HeatingPlantType"].add_object(ua.NodeId(f"HeatingPlantType.{name}", idx),
                                                    ua.QualifiedName(name, idx))
         await _set_type(o, t[tname])
@@ -161,9 +177,10 @@ async def build(server: Server) -> tuple[int, dict]:
     await _set_type(plant, types["HeatingPlantType"])
     parents = {"": plant}
     for tag, type_name, text in [
-            ("TIC101", "TemperatureControlLoopType", "Flow temperature control loop (heating curve -> PID -> mixing valve)"),
+            ("TIC101", "ControlLoopType", "Flow temperature control loop (heating curve -> PID -> mixing valve)"),
             ("TI102", "TemperatureIndicatorType", "Return temperature indication"),
-            ("TI103", "TemperatureIndicatorType", "Outdoor temperature indication")]:
+            ("TI103", "TemperatureIndicatorType", "Outdoor temperature indication"),
+            ("PDIC301", "ControlLoopType", "Network differential pressure loop (PI -> pump speed P301)")]:
         o = await plant.add_object(ua.NodeId(tag, idx), ua.QualifiedName(tag, idx))
         await _set_type(o, types[type_name])
         await o.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(text))))
@@ -174,6 +191,16 @@ async def build(server: Server) -> tuple[int, dict]:
     for nid, bn, desc, default in PARAMETERS:
         v = await hc.add_variable(ua.NodeId(nid, idx), ua.QualifiedName(bn, idx),
                                   ua.Variant(default, ua.VariantType.Double))
+        await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(desc))))
+        await v.set_writable()
+        nodes[nid] = v
+    sim = await plant.add_object(ua.NodeId("Simulation", idx), ua.QualifiedName("Simulation", idx))
+    await _set_type(sim, types["SimulationInputsType"])
+    await sim.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(
+        "Inputs that replace the real world in the twin; not plant signals"))))
+    for nid, bn, desc, default in SIMULATION:
+        v = await sim.add_variable(ua.NodeId(nid, idx), ua.QualifiedName(bn, idx),
+                                   ua.Variant(default, ua.VariantType.Double))
         await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(desc))))
         await v.set_writable()
         nodes[nid] = v
@@ -206,7 +233,7 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
               password: str | None = None, pki: pathlib.Path = security.PKI) -> None:
     """Run the twin and serve it.
     outdoor="dwd": replay the real Magdeburg week, one DWD hour every 3600/time_lapse s.
-    outdoor="manual": TI103.PV is only changed by OPC UA writes.
+    outdoor="manual": the outdoor temperature comes from Simulation.OutdoorTemperature (OPC UA write).
     password=None: no security (local demo only). Otherwise Basic256Sha256 SignAndEncrypt, trusted client
     certificates only, username "operator" with this password."""
     secure = password is not None
@@ -229,6 +256,7 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
     plant = HeatingPlant(t_outdoor=hours[0] if hours else 0.0)
     plant.settle()
     await n["TI103.PV"].write_value(plant.t_outdoor)
+    await n["Simulation.OutdoorTemperature"].write_value(plant.t_outdoor)
     async with server:
         if ready:
             ready.set()
@@ -238,7 +266,9 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
                 plant.t_outdoor = hours[int(elapsed * time_lapse / 3600) % len(hours)]
                 await n["TI103.PV"].write_value(plant.t_outdoor)
             else:
-                plant.t_outdoor = await n["TI103.PV"].read_value()
+                plant.t_outdoor = await n["Simulation.OutdoorTemperature"].read_value()
+                await n["TI103.PV"].write_value(plant.t_outdoor)
+            plant.pump.load = await n["Simulation.ConsumerLoad"].read_value()
             plant.slope = await n["HeatingCurve.Slope"].read_value()
             plant.level = await n["HeatingCurve.Level"].read_value()
             plant.t_flow_max = await n["HeatingCurve.FlowMax"].read_value()
@@ -246,7 +276,9 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
             for _ in range(max(1, round(time_lapse))):
                 plant.step()
             for nid, val in [("TIC101.SP", plant.t_flow_set), ("TIC101.PV", plant.circuit.t_flow),
-                             ("TIC101.OP", plant.valve), ("TI102.PV", plant.circuit.t_return)]:
+                             ("TIC101.OP", plant.valve), ("TI102.PV", plant.circuit.t_return),
+                             ("PDIC301.SP", plant.pump.dp_set), ("PDIC301.PV", plant.pump.network.dp),
+                             ("PDIC301.OP", plant.pump.speed_set)]:
                 await n[nid].write_value(float(val))
             await asyncio.sleep(0.1)
             elapsed += 0.1
@@ -258,7 +290,8 @@ async def export_nodeset(path: pathlib.Path) -> None:
     idx, n = await build(server)
     plant = n["_plant"]
     type_roots = [server.get_node(ua.NodeId(t, idx)) for t in
-                  ("TemperatureIndicatorType", "TemperatureControlLoopType", "HeatingCurveType", "HeatingPlantType")]
+                  ("TemperatureIndicatorType", "ControlLoopType", "HeatingCurveType", "SimulationInputsType",
+                   "HeatingPlantType")]
     nodes = type_roots + [plant] + await plant.get_children()
     queue = list(nodes)
     while queue:

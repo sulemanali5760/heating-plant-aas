@@ -37,6 +37,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 |---|---|---|
 | Heating curve, 3 operating points | PLCSIM commissioning log (tests 0, 0b, 6) | exact |
 | Steady valve position, 4 operating points | PLCSIM: 20.48 / 43.52 / 38.65 / 33.82 % | within 0.06 % |
+| Pump loop PDIC301: load 50 / 90 / 20 % at 1.0 bar | PLCSIM: 74.11 / 87.26 / 68.53 % speed, 6.85 / 12.33 / 2.74 m³/h; release logic tests 13–18 | identical to 0.01 |
 | Setpoint step 44 → 56 °C | PLCSIM trace: dead time 10 s, 56 °C after 60 s, peak 56.71 °C at 72 s | 10.4 s, 63 s, 56.70 °C at 73.5 s |
 | NodeSet, independent check | Second OPC UA stack (node-opcua) loads `HeatingPlant.NodeSet2.xml` with the standard nodeset | pass, in CI |
 | OPC UA model | ObjectTypes and type definitions; OPC 10000-8: type, data type, EURange, unit namespace; read-only measurements | automated client test |
@@ -65,7 +66,6 @@ The second line creates the client certificate and puts it into the server's tru
 - **Certificates are self-signed.** A plant would use certificates from its own CA (OPC UA GDS or company PKI) and certificate revocation lists.
 - **PID_Compact** is reproduced from its documented structure. Siemens-internal details are not public, so the dynamic test uses tolerances.
 - **Technical Data properties** use concept descriptions defined in this repo, because no ECLASS/IEC CDD properties could be verified free of charge for these quantities.
-- **One loop:** the network-pump Δp loop (PDIC301) of the PLC project is not in the twin yet.
 - **Not a product:** the nameplate says so. It describes a demonstrator, not something you can order.
 
 ## Kurz auf Deutsch

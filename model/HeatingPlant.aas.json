@@ -717,7 +717,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/RoomTemperatureSetpoint"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/RoomTemperatureSetpoint"
                           }
                         ]
                       },
@@ -738,7 +738,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Slope"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/Slope"
                           }
                         ]
                       },
@@ -759,7 +759,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Level"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/Level"
                           }
                         ]
                       },
@@ -780,7 +780,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMin"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/FlowTemperatureMin"
                           }
                         ]
                       },
@@ -801,7 +801,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMax"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/FlowTemperatureMax"
                           }
                         ]
                       },
@@ -843,7 +843,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/BoilerTemperature"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/BoilerTemperature"
                           }
                         ]
                       },
@@ -864,7 +864,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/DeadTime"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/DeadTime"
                           }
                         ]
                       },
@@ -885,7 +885,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/TimeConstant"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/TimeConstant"
                           }
                         ]
                       },
@@ -927,7 +927,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalGain"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/ProportionalGain"
                           }
                         ]
                       },
@@ -948,7 +948,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/IntegralTime"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/IntegralTime"
                           }
                         ]
                       },
@@ -969,7 +969,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/DerivativeTime"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/DerivativeTime"
                           }
                         ]
                       },
@@ -990,7 +990,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalWeighting"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/ProportionalWeighting"
                           }
                         ]
                       },
@@ -1011,7 +1011,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/SampleTime"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/SampleTime"
                           }
                         ]
                       },
@@ -1022,6 +1022,216 @@
                         {
                           "language": "en",
                           "text": "PID algorithm sample time [s]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                },
+                {
+                  "idShort": "NetworkPumpP301",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "ShutOffHead",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/ShutOffHead"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "2.2",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Pump differential pressure at zero flow and 100 % speed [bar]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "ConsumerKvMax",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/ConsumerKvMax"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "13.7",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Kv of all consumer valves fully open (flow at 1 bar) [m³/h]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "DesignFlow",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/DesignFlow"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "15.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Flow at 100 % speed, all valves open [m³/h]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "HeatingLimit",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/HeatingLimit"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "15.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Pump released below this outdoor temperature (1 K hysteresis) [°C]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "FrostLimit",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/FrostLimit"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "3.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Pump always runs below this outdoor temperature [°C]"
+                        }
+                      ]
+                    }
+                  ],
+                  "modelType": "SubmodelElementCollection"
+                },
+                {
+                  "idShort": "ControllerPDIC301",
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Note: The idShort is arbitrary. Note: Using displayName is recommended."
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://admin-shell.io/SMT/General/Arbitrary"
+                      }
+                    ]
+                  },
+                  "value": [
+                    {
+                      "idShort": "DifferentialPressureSetpoint",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/DifferentialPressureSetpoint"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "1.0",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Setpoint of the network differential pressure [bar]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "ProportionalGain",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/ProportionalGain"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "119.3",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PI gain after fine tuning (PI chosen over PID: noisy dp signal) [%/bar]"
+                        }
+                      ]
+                    },
+                    {
+                      "idShort": "IntegralTime",
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/IntegralTime"
+                          }
+                        ]
+                      },
+                      "valueType": "xs:double",
+                      "modelType": "Property",
+                      "value": "2.72",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "PI integral time after fine tuning [s]"
                         }
                       ]
                     }
@@ -1053,7 +1263,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/CPU"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Controller/CPU"
                           }
                         ]
                       },
@@ -1074,7 +1284,7 @@
                         "keys": [
                           {
                             "type": "GlobalReference",
-                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/CycleTime"
+                            "value": "https://github.com/sulemanali5760/heating-plant-aas/cd/Controller/CycleTime"
                           }
                         ]
                       },
@@ -2847,6 +3057,747 @@
                               "valueType": "xs:string",
                               "modelType": "Property",
                               "value": "/Root/Objects/2:HeatingPlant/2:TI103/2:PV"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "PDIC301_SP",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "PDIC301.SP"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Network differential pressure setpoint"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "BAR"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "2.5"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=PDIC301.SP"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:PDIC301/2:SP"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "PDIC301_PV",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "PDIC301.PV"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Network differential pressure at the consumers (PDT301)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "BAR"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "2.5"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=PDIC301.PV"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:PDIC301/2:PV"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "PDIC301_OP",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "PDIC301.OP"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Speed setpoint of network pump P301 (SC301)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P1"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "100.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=PDIC301.OP"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:PDIC301/2:OP"
                             }
                           ],
                           "modelType": "SubmodelElementCollection"
@@ -21856,8 +22807,8 @@
   ],
   "conceptDescriptions": [
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/RoomTemperatureSetpoint",
-      "idShort": "RoomTemperatureSetpoint",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/RoomTemperatureSetpoint",
+      "idShort": "HeatingCurve_RoomTemperatureSetpoint",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21867,8 +22818,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Slope",
-      "idShort": "Slope",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/Slope",
+      "idShort": "HeatingCurve_Slope",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21878,8 +22829,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Level",
-      "idShort": "Level",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/Level",
+      "idShort": "HeatingCurve_Level",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21889,8 +22840,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMin",
-      "idShort": "FlowTemperatureMin",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/FlowTemperatureMin",
+      "idShort": "HeatingCurve_FlowTemperatureMin",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21900,8 +22851,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/FlowTemperatureMax",
-      "idShort": "FlowTemperatureMax",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/HeatingCurve/FlowTemperatureMax",
+      "idShort": "HeatingCurve_FlowTemperatureMax",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21911,8 +22862,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/BoilerTemperature",
-      "idShort": "BoilerTemperature",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/BoilerTemperature",
+      "idShort": "MixingCircuit_BoilerTemperature",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21922,8 +22873,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/DeadTime",
-      "idShort": "DeadTime",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/DeadTime",
+      "idShort": "MixingCircuit_DeadTime",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21933,8 +22884,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/TimeConstant",
-      "idShort": "TimeConstant",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/MixingCircuit/TimeConstant",
+      "idShort": "MixingCircuit_TimeConstant",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21944,8 +22895,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalGain",
-      "idShort": "ProportionalGain",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/ProportionalGain",
+      "idShort": "ControllerTIC101_ProportionalGain",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21955,8 +22906,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/IntegralTime",
-      "idShort": "IntegralTime",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/IntegralTime",
+      "idShort": "ControllerTIC101_IntegralTime",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21966,8 +22917,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/DerivativeTime",
-      "idShort": "DerivativeTime",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/DerivativeTime",
+      "idShort": "ControllerTIC101_DerivativeTime",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21977,8 +22928,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ProportionalWeighting",
-      "idShort": "ProportionalWeighting",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/ProportionalWeighting",
+      "idShort": "ControllerTIC101_ProportionalWeighting",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21988,8 +22939,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/SampleTime",
-      "idShort": "SampleTime",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerTIC101/SampleTime",
+      "idShort": "ControllerTIC101_SampleTime",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -21999,8 +22950,96 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/CPU",
-      "idShort": "CPU",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/ShutOffHead",
+      "idShort": "NetworkPumpP301_ShutOffHead",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Pump differential pressure at zero flow and 100 % speed. Unit: bar. Source: [D] FB_ModellNetz.iDpNull."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/ConsumerKvMax",
+      "idShort": "NetworkPumpP301_ConsumerKvMax",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Kv of all consumer valves fully open (flow at 1 bar). Unit: m³/h. Source: [D] FB_ModellNetz.iKvMax."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/DesignFlow",
+      "idShort": "NetworkPumpP301_DesignFlow",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Flow at 100 % speed, all valves open. Unit: m³/h. Source: [D] FB_ModellNetz design note."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/DifferentialPressureSetpoint",
+      "idShort": "ControllerPDIC301_DifferentialPressureSetpoint",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Setpoint of the network differential pressure. Unit: bar. Source: [D] DB_Netz.dpSoll."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/ProportionalGain",
+      "idShort": "ControllerPDIC301_ProportionalGain",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PI gain after fine tuning (PI chosen over PID: noisy dp signal). Unit: %/bar. Source: [M] commissioning 2 Oct 2026."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/ControllerPDIC301/IntegralTime",
+      "idShort": "ControllerPDIC301_IntegralTime",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "PI integral time after fine tuning. Unit: s. Source: [M] commissioning 2 Oct 2026."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/HeatingLimit",
+      "idShort": "NetworkPumpP301_HeatingLimit",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Pump released below this outdoor temperature (1 K hysteresis). Unit: °C. Source: [D] FB_Netzpumpe.iHeizgrenze."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/NetworkPumpP301/FrostLimit",
+      "idShort": "NetworkPumpP301_FrostLimit",
+      "modelType": "ConceptDescription",
+      "description": [
+        {
+          "language": "en",
+          "text": "Pump always runs below this outdoor temperature. Unit: °C. Source: [D] FB_Netzpumpe.iFrostgrenze."
+        }
+      ]
+    },
+    {
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Controller/CPU",
+      "idShort": "Controller_CPU",
       "modelType": "ConceptDescription",
       "description": [
         {
@@ -22010,8 +23049,8 @@
       ]
     },
     {
-      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/CycleTime",
-      "idShort": "CycleTime",
+      "id": "https://github.com/sulemanali5760/heating-plant-aas/cd/Controller/CycleTime",
+      "idShort": "Controller_CycleTime",
       "modelType": "ConceptDescription",
       "description": [
         {

@@ -1,9 +1,12 @@
 """Plant twin of the heating plant (Heizzentrale), ported 1:1 from the PLC source.
 
-Source of every formula: heizzentrale-tia/src/Heizzentrale_Kern.scl
+Source of every formula: heizzentrale-tia/src/Heizzentrale_Kern.scl and Heizzentrale_Netz.scl
   - heating_curve      <- FUNCTION "FC_Heizkurve"
   - MixingCircuit      <- FUNCTION_BLOCK "FB_StreckeVorlauf"
-Controller parameters: heizzentrale-tia/docs/Inbetriebnahmeprotokoll.md, fine tuning (test 4).
+  - PumpRelease        <- FUNCTION_BLOCK "FB_Netzpumpe"
+  - HeatingNetwork     <- FUNCTION_BLOCK "FB_ModellNetz"
+Controller parameters: heizzentrale-tia/docs/Inbetriebnahmeprotokoll.md (TIC101: test 4, 25 Sep 2026;
+PDIC301: PI after fine tuning, 2 Oct 2026).
 See SOURCES.md for the tag of each constant.
 """
 from dataclasses import dataclass, field
@@ -72,6 +75,10 @@ class Pid2Dof:
     _t: float = 0.0
     output: float = 0.0
 
+    def reset(self) -> None:
+        """PID_Compact Reset input: output 0, integral cleared."""
+        self.integral, self._d, self._d_in_prev, self.output = 0.0, 0.0, None, 0.0
+
     def preset(self, w: float, x: float, y: float) -> None:
         """Bumpless start at a known operating point (manual -> automatic)."""
         self.integral = y - self.kp * (self.b * w - x)
@@ -110,6 +117,79 @@ def steady_valve(t_outdoor: float, t_flow: float, t_boiler: float = 75.0) -> flo
 
 
 @dataclass
+class PumpRelease:
+    """When may network pump P301 run? Same logic as FB_Netzpumpe (control, not closed-loop)."""
+    heating_limit: float = 15.0   # °C, heating demand below this
+    frost_limit: float = 3.0      # °C, pump always runs below this
+    hysteresis: float = 1.0       # K
+    demand: bool = False
+    frost: bool = False
+
+    def step(self, t_outdoor: float, plant_released: bool, drive_ok: bool) -> bool:
+        if t_outdoor < self.heating_limit:
+            self.demand = True
+        elif t_outdoor > self.heating_limit + self.hysteresis:
+            self.demand = False
+        if t_outdoor < self.frost_limit:
+            self.frost = True
+        elif t_outdoor > self.frost_limit + self.hysteresis:
+            self.frost = False
+        return (self.demand or self.frost) and plant_released and drive_ok
+
+
+@dataclass
+class HeatingNetwork:
+    """Pump with quadratic curve against pipes and consumers. Same equations as FB_ModellNetz:
+        pump: dp = dp0*(n/100)^2 - k_pump*Q^2   (affinity law, H ~ n^2)
+        pipes: dp = k_pipe*Q^2 ;  consumers: dp = Q^2/Kv^2, Kv = Kv_max*load/100
+        operating point: dp0*(n/100)^2 = Q^2*(k_pump + k_pipe + 1/Kv^2); measured dp across consumers.
+    PT1 for the drive ramp (speed) and the hydraulics (pressure)."""
+    dp0: float = 2.2          # bar, shut-off head at 100 %
+    k_pump: float = 0.00311   # bar/(m³/h)²
+    k_pipe: float = 0.00133   # bar/(m³/h)²
+    kv_max: float = 13.7      # m³/h at 1 bar, all consumer valves open
+    t_speed: float = 2.0      # s, drive ramp as PT1
+    t_pressure: float = 1.0   # s
+    speed: float = 0.0        # % actual
+    dp: float = 0.0           # bar, "measured" PDT301
+    flow: float = 0.0         # m³/h
+
+    def step(self, speed_set: float, load_pct: float, pump_on: bool, dt: float) -> None:
+        n_set = min(max(speed_set, 0.0), 100.0) if pump_on else 0.0
+        self.speed += (n_set - self.speed) * dt / self.t_speed
+        s = self.speed / 100.0
+        kv = self.kv_max * min(max(load_pct, 1.0), 100.0) / 100.0
+        q2 = self.dp0 * s * s / (self.k_pump + self.k_pipe + 1.0 / (kv * kv))
+        self.dp += (q2 / (kv * kv) - self.dp) * dt / self.t_pressure
+        self.flow = q2 ** 0.5
+
+
+@dataclass
+class PumpLoop:
+    """Loop PDIC301: release -> PI on differential pressure -> drive speed -> network.
+    PI, not PID: chosen in the PLC project because a real dp signal is noisy and the D part would pass
+    the noise to the drive (commissioning log, 2 Oct 2026)."""
+    dp_set: float = 1.0           # bar, DB_Netz.dpSoll
+    load: float = 50.0            # %, consumer valve opening, DB_Netz.lastVerbraucher
+    plant_released: bool = True  # emergency heating switch K0 not pressed (Anlage_Frei)
+    drive_ok: bool = True         # no drive fault (FU_Stoerung, normally closed)
+    release: PumpRelease = field(default_factory=PumpRelease)
+    network: HeatingNetwork = field(default_factory=HeatingNetwork)
+    pid: Pid2Dof = field(default_factory=lambda: Pid2Dof(kp=119.3, ti=2.72, td=0.0, b=0.8, c=0.0, ts=0.1))
+    pump_on: bool = False
+    speed_set: float = 0.0
+
+    def step(self, t_outdoor: float, dt: float) -> None:
+        self.pump_on = self.release.step(t_outdoor, self.plant_released, self.drive_ok)
+        if self.pump_on:
+            self.speed_set = self.pid.update(self.dp_set, self.network.dp, dt)
+        else:
+            self.pid.reset()
+            self.speed_set = 0.0
+        self.network.step(self.speed_set, self.load, self.pump_on, dt)
+
+
+@dataclass
 class HeatingPlant:
     """Loop TIC101: heating curve -> PID -> mixing valve -> flow temperature. Cycle 100 ms like OB30."""
     t_outdoor: float = 0.0
@@ -124,6 +204,7 @@ class HeatingPlant:
     cycle: float = 0.1
     circuit: MixingCircuit = field(default_factory=MixingCircuit)
     pid: Pid2Dof = field(default_factory=Pid2Dof)
+    pump: PumpLoop = field(default_factory=PumpLoop)
     t_flow_set: float = 0.0
     valve: float = 0.0
     time: float = 0.0
@@ -136,6 +217,7 @@ class HeatingPlant:
         else:
             self.valve = self.manual_valve
         self.circuit.step(self.valve, self.t_boiler, self.t_outdoor, self.cycle)
+        self.pump.step(self.t_outdoor, self.cycle)
         self.time += self.cycle
 
     def settle(self) -> None:
