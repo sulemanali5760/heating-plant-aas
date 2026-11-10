@@ -29,6 +29,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | OPC UA server | `heating_plant/opcua_server.py`, `model/HeatingPlant.NodeSet2.xml` | Own ObjectTypes (`HeatingPlantType`, `TemperatureControlLoopType`, `TemperatureIndicatorType`, `HeatingCurveType`) with mandatory members (OPC 10000-3); values as AnalogItemType with EURange and EngineeringUnits (OPC 10000-8), UNECE Rec. 20 units |
 | AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description, IDTA 02008-1-1 Time Series Data (the Magdeburg week, 168 hourly records) |
 | AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…`, `uav:browsePath`, and security from `uav:channelsec` / `uav:authentication` (OPC 10101 WoT binding) |
+| AAS REST API | `heating_plant/aas_server.py` | IDTA 01002 AAS Part 2 API v3.1 via the Eclipse BaSyx Python server (read-only repository: `/shells`, `/submodels`, element by idShort path) |
 | Security | `heating_plant/security.py` | OPC UA Basic256Sha256, SignAndEncrypt, X.509 application certificates with trust list, UserName token (OPC 10000-2/-4/-7); password checked as PBKDF2-HMAC-SHA256 hash |
 
 ## How it is validated
@@ -44,6 +45,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | AAS files | IDTA `aas-test-engines` (metamodel, constraints, AASX package) | pass |
 | AAS submodels | Element by element against the official IDTA template JSON (mandatory elements, semantic IDs) | pass |
 | AID | Every `href` and browse path resolves to the same node on the live server | pass |
+| AAS REST API | `/shells` and every `/submodels/{id}` return what the AASX contains; writes refused | pass |
 | Security | Basic256Sha256 SignAndEncrypt + UserName: trusted client reads; no encryption, wrong password, untrusted certificate are each refused | pass |
 
 The PLCSIM values come from the author's TIA Portal V19 project (commissioned 25 Sep 2026). Every number in this repository is traced in [SOURCES.md](SOURCES.md) as measured, standard/datasheet, design decision, or assumption.
@@ -56,6 +58,7 @@ export HEATING_PLANT_PASSWORD=...                                       # Window
 python -c "import asyncio;from heating_plant import security as s;c,_=asyncio.run(s.ensure_certificate('client',s.CLIENT_URI,False));s.trust(c)"
 python -m heating_plant.opcua_server --outdoor dwd --time-lapse 600    # secure server; replays the Magdeburg week, 1 h = 6 s
 python -m heating_plant.aid_client model/HeatingPlant.aasx 30           # second terminal: connects using only the AAS
+python -m heating_plant.aas_server                                       # AAS Part 2 REST API on http://127.0.0.1:8081/api/v3.1/shells
 python -m pytest                                                        # all checks
 ```
 

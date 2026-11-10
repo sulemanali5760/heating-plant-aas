@@ -1,5 +1,8 @@
 asyncua==2.1.0
 basyx-python-sdk==2.2.0
+# Eclipse BaSyx AAS Part 2 server, release 2.2.0 commit (not published on PyPI)
+basyx-python-server @ git+https://github.com/eclipse-basyx/basyx-python-sdk@a846219d8de7145a144fa832de926c452bab2f17#subdirectory=server
+Werkzeug==3.1.9
 aas-test-engines==1.0.3
 matplotlib==3.11.2
 pytest==9.2.0

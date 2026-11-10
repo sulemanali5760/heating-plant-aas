@@ -101,6 +101,15 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Technical-data concept descriptions (`…/cd/<name>`) | [A] | ECLASS/IEC CDD would be the industry choice; no matching entries could be verified free of charge, so each property gets its own concept description with definition, unit and source. |
 | Endpoint `opc.tcp://127.0.0.1:4840/heating-plant/` | [D] | Local demo endpoint; 4840 is the IANA-registered OPC UA port |
 
+## AAS REST API (`heating_plant/aas_server.py`)
+
+| Item | Tag | Source |
+|---|---|---|
+| API | [S] | IDTA 01002 Specification of the AAS Part 2: Application Programming Interfaces, v3.1 (base path `/api/v3.1`, identifiers base64url-encoded) |
+| Server | [S] | Eclipse BaSyx Python server (`basyx-python-server`), MIT, pinned to the 2.2.0 release commit `a846219d8de7145a144fa832de926c452bab2f17` of github.com/eclipse-basyx/basyx-python-sdk; adds Werkzeug 3.1.9 (BSD-3-Clause). Not on PyPI, so `pip-audit` lists it as not auditable; its dependencies are audited. |
+| `$value` endpoint | [S] | Answered 501 Not Implemented by BaSyx 2.2.0 (`app/interfaces/repository.py`); tests read the full element instead |
+| Read-only, localhost | [D] | The AASX stays the single source of truth; the server publishes it, it does not edit it |
+
 ## Plots (`scripts/week_plot.py`, `docs/`)
 
 | Item | Tag | Source |
