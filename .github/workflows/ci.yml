@@ -1,0 +1,29 @@
+name: ci
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Raw data and IDTA templates unchanged
+        run: |
+          python scripts/prepare_dwd.py
+          git diff --exit-code data/
+      - name: Unit, OPC UA and AAS tests (plant twin vs PLCSIM, template conformance, AID round trip)
+        run: python -m pytest -v
+      - name: IDTA test engine on the published AAS files
+        run: |
+          python -m aas_test_engines check_file --format json model/HeatingPlant.aas.json
+          python -m aas_test_engines check_file --format aasx model/HeatingPlant.aasx
+      - name: Generated files are up to date
+        run: |
+          python -m heating_plant.opcua_server --export-nodeset model/HeatingPlant.NodeSet2.xml
+          git diff --exit-code model/HeatingPlant.aas.json model/HeatingPlant.NodeSet2.xml
+      - name: Known vulnerabilities in dependencies
+        run: python -m pip_audit -r requirements.txt

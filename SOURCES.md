@@ -62,4 +62,27 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | asyncua | 2.1.0 | LGPL-3.0+ | OPC UA server and client (FreeOpcUa) |
 | basyx-python-sdk | 2.2.0 | MIT | AAS metamodel V3, AASX/JSON (Eclipse BaSyx) |
 | aas-test-engines | 1.0.3 | Apache-2.0 (github.com/admin-shell-io/aas-test-engines) | Official IDTA compliance checker for AAS files |
-| pip-audit | latest | Apache-2.0 | Known-vulnerability scan of the dependency tree: no findings on 10 Nov 2026 |
+| pip-audit | 2.10.1 | Apache-2.0 | Known-vulnerability scan of the dependency tree: no findings on 10 Nov 2026 |
+
+## Asset Administration Shell (`heating_plant/aas_builder.py`, `model/`)
+
+| Item | Tag | Source |
+|---|---|---|
+| Metamodel | [S] | AAS Specification Part 1, metamodel V3.0 (IDTA 01001-3-0); files checked with `aas-test-engines` 1.0.3 |
+| Digital Nameplate template | [S] | IDTA 02006-3-0, v3.0.3, `standards/idta/IDTA_02006-3-0-3_DigitalNameplate.json`, git blob `d2f95ca8…` = published file |
+| Contact/Address drop-in | [S] | IDTA 02002-1-0, v1.0.4, `standards/idta/IDTA_02002-1-0-4_ContactInformation.json`, git blob `06f1abf6…` |
+| Technical Data template | [S] | IDTA 02003-2-0, v2.0.4, `standards/idta/IDTA_02003-2-0-4_TechnicalData.json`, git blob `61364f12…` |
+| Asset Interfaces Description template | [S] | IDTA 02017, v1.2 (May 2026), `standards/idta/IDTA_02017-1-2_AssetInterfacesDescription.json`, git blob `2b68a486…`; spec PDF `IDTA 02017_Submodel_Asset Interfaces Description.pdf`, tables 28 and 66 (OPC UA binding) |
+| Template licence | [S] | CC BY 4.0, github.com/admin-shell-io/submodel-templates |
+| AID property `type` = `number`, `unit` = UNECE code | [S] | IDTA 02017 1.2, section 2.9 (type: object, array, string, number, integer, boolean, null; unit: schema.org unitCode) |
+| Manufacturer, address | [D] | Author's name and city only (Magdeburg, DE). No street address on purpose (privacy); the template marks street as optional. |
+| Order code "not orderable (demonstrator)" | [A] | Mandatory in the nameplate, but the plant is not a product. Stated openly instead of inventing a number. |
+| Technical-data concept descriptions (`…/cd/<name>`) | [A] | ECLASS/IEC CDD would be the industry choice; no matching entries could be verified free of charge, so each property gets its own concept description with definition, unit and source. |
+| Endpoint `opc.tcp://127.0.0.1:4840/heating-plant/` | [D] | Local demo endpoint; 4840 is the IANA-registered OPC UA port |
+
+## Plots (`scripts/week_plot.py`, `docs/`)
+
+| Item | Tag | Source |
+|---|---|---|
+| Outdoor temperature held constant within each hour | [D] | DWD gives one value per hour; no interpolation is invented |
+| matplotlib 3.11.2 | [S] | Matplotlib licence (PSF-based); `pip-audit` clean on 10 Nov 2026 |
