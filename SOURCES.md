@@ -74,6 +74,9 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Contact/Address drop-in | [S] | IDTA 02002-1-0, v1.0.4, `standards/idta/IDTA_02002-1-0-4_ContactInformation.json`, git blob `06f1abf6…` |
 | Technical Data template | [S] | IDTA 02003-2-0, v2.0.4, `standards/idta/IDTA_02003-2-0-4_TechnicalData.json`, git blob `61364f12…` |
 | Asset Interfaces Description template | [S] | IDTA 02017, v1.2 (May 2026), `standards/idta/IDTA_02017-1-2_AssetInterfacesDescription.json`, git blob `2b68a486…`; spec PDF `IDTA 02017_Submodel_Asset Interfaces Description.pdf`, tables 28 and 66 (OPC UA binding) |
+| Time Series Data template | [S] | IDTA 02008-1-1, v1.1.3, `standards/idta/IDTA_02008-1-1-3_TimeSeriesData.json`, git blob `dc678243…`; spec PDF `IDTA 02008-1-1_Submodel_TimeSeriesData.pdf`: time semantic `UtcTime` (table 4), State enumeration `completed` (table 7), SamplingInterval in s |
+| Time series values | [S]+[D] | `TI103_PV` = DWD measurement; the other variables are the twin's response at minute 59 of each hour (`docs/week_magdeburg_2022-12.csv`) |
+| Template qualifiers removed from instances | [S] | Cardinality / AllowedIdShort / Select / Constraint qualifiers describe templates (AAS Part 1, SMT conventions), not instances |
 | Template licence | [S] | CC BY 4.0, github.com/admin-shell-io/submodel-templates |
 | AID property `type` = `number`, `unit` = UNECE code | [S] | IDTA 02017 1.2, section 2.9 (type: object, array, string, number, integer, boolean, null; unit: schema.org unitCode) |
 | Manufacturer, address | [D] | Author's name and city only (Magdeburg, DE). No street address on purpose (privacy); the template marks street as optional. |

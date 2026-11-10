@@ -27,7 +27,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 |---|---|---|
 | Plant twin | `heating_plant/model.py` | Port of `FC_Heizkurve` and `FB_StreckeVorlauf` from the PLC project; 2-DOF PIDT1 as documented for PID_Compact |
 | OPC UA server | `heating_plant/opcua_server.py`, `model/HeatingPlant.NodeSet2.xml` | Own ObjectTypes (`HeatingPlantType`, `TemperatureControlLoopType`, `TemperatureIndicatorType`, `HeatingCurveType`) with mandatory members (OPC 10000-3); values as AnalogItemType with EURange and EngineeringUnits (OPC 10000-8), UNECE Rec. 20 units |
-| AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description |
+| AAS | `heating_plant/aas_builder.py`, `model/HeatingPlant.aasx` | AAS metamodel V3.0; IDTA 02006-3-0 Digital Nameplate, IDTA 02003-2-0 Technical Data, IDTA 02017 1.2 Asset Interfaces Description, IDTA 02008-1-1 Time Series Data (the Magdeburg week, 168 hourly records) |
 | AID client | `heating_plant/aid_client.py` | AID OPC UA binding: `href = nsu=…;s=…` and `uav:browsePath` (OPC 10101 WoT binding) |
 
 ## How it is validated
@@ -37,6 +37,7 @@ A weather-compensated heating plant, commissioned on a Siemens S7-1500 (PLCSIM),
 | Heating curve, 3 operating points | PLCSIM commissioning log (tests 0, 0b, 6) | exact |
 | Steady valve position, 4 operating points | PLCSIM: 20.48 / 43.52 / 38.65 / 33.82 % | within 0.06 % |
 | Setpoint step 44 → 56 °C | PLCSIM trace: dead time 10 s, 56 °C after 60 s, peak 56.71 °C at 72 s | 10.4 s, 63 s, 56.70 °C at 73.5 s |
+| NodeSet, independent check | Second OPC UA stack (node-opcua) loads `HeatingPlant.NodeSet2.xml` with the standard nodeset | pass, in CI |
 | OPC UA model | ObjectTypes and type definitions; OPC 10000-8: type, data type, EURange, unit namespace; read-only measurements | automated client test |
 | AAS files | IDTA `aas-test-engines` (metamodel, constraints, AASX package) | pass |
 | AAS submodels | Element by element against the official IDTA template JSON (mandatory elements, semantic IDs) | pass |

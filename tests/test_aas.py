@@ -19,12 +19,17 @@ CARD = "SMT/Cardinality"
 # Template placeholders whose instances may carry any idShort / own semantic IDs
 WILDCARD_IDSHORTS = {"ArbitraryProperty", "ArbitraryMLP", "ArbitraryRange", "ArbitrarySMC", "ArbitrarySML",
                      "Section", "property_name"}
+# IDTA 02008-1-1 table 4: Time may use any of these time scales; record variables are {Variable}, 0..n
+TIME_SEMANTICS = {f"https://admin-shell.io/idta/TimeSeries/{t}/1/1"
+                  for t in ("UtcTime", "TaiTime", "RelativePointInTime", "RelativeTimeDuration")}
+VARIABLE_PLACEHOLDERS = {"sampleAccelerationX", "sampleAccelerationY", "sampleAccelerationZ"}
 # AID 1.2: the submodel needs one or more interfaces; the template shows one example per protocol.
 ALIASES = {"InterfaceOPCUA": "InterfaceTemplateForOPCUA"}
 
 
 def _is_placeholder(name):
-    return name in WILDCARD_IDSHORTS or (name or "").startswith("InterfaceTemplateFor")
+    return (name in WILDCARD_IDSHORTS or name in VARIABLE_PLACEHOLDERS
+            or (name or "").startswith("InterfaceTemplateFor"))
 
 
 def test_idta_test_engine_json():
@@ -42,7 +47,8 @@ def _sem(e):
 
 
 def _card(e):
-    return next((q["value"] for q in e.get("qualifiers", []) if q.get("type") == CARD), "ZeroToOne")
+    # Newer templates write "SMT/Cardinality", older ones (e.g. Time Series 1.1) "Cardinality"
+    return next((q["value"] for q in e.get("qualifiers", []) if q.get("type") in (CARD, "Cardinality")), "ZeroToOne")
 
 
 def _kids(e):
@@ -63,18 +69,28 @@ def _conform(inst, tpl, path, errors):
             if not any(i.get("idShort") == t["idShort"] for i in _kids(inst)):
                 errors.append(f"{path}/{t['idShort']}: mandatory element missing")
     for i in _kids(inst):
-        t = by_name.get(ALIASES.get(i.get("idShort"), i.get("idShort"))) or next(
-            (p for p in placeholders if p["modelType"] == i["modelType"]), None)
+        name = i.get("idShort", "")
+        t = by_name.get(ALIASES.get(name, name))
+        if t is None:  # repeated element: template idShort + suffix (Record001, InternalSegment...)
+            t = next((c for c in tkids if c.get("idShort") and name.startswith(c["idShort"])
+                      and _card(c) in ("ZeroToMany", "OneToMany") and c["modelType"] == i["modelType"]), None)
+        if t is None:
+            t = next((p for p in placeholders if p["modelType"] == i["modelType"]), None)
+        if t is None and i["modelType"] == "Property":
+            t = next((c for c in tkids if c.get("idShort") in VARIABLE_PLACEHOLDERS), None)
         if t is None:
             errors.append(f"{path}/{i.get('idShort')}: not defined in template")
             continue
-        if t.get("idShort") not in ("ArbitraryProperty", "ArbitraryMLP", "ArbitraryRange") and _sem(i) != _sem(t):
+        free = t.get("idShort") in {"ArbitraryProperty", "ArbitraryMLP", "ArbitraryRange"} | VARIABLE_PLACEHOLDERS
+        time_ok = t.get("idShort") == "Time" and _sem(i) in TIME_SEMANTICS
+        if not free and not time_ok and _sem(i) != _sem(t):
             errors.append(f"{path}/{i.get('idShort')}: semanticId {_sem(i)} != template {_sem(t)}")
         _conform(i, t, f"{path}/{i.get('idShort', '[]')}", errors)
 
 
 @pytest.mark.parametrize("name, template", [
-    ("Nameplate", b.NAMEPLATE), ("TechnicalData", b.TECHDATA), ("AssetInterfacesDescription", b.AID)])
+    ("Nameplate", b.NAMEPLATE), ("TechnicalData", b.TECHDATA), ("AssetInterfacesDescription", b.AID),
+    ("TimeSeries", b.TIMESERIES)])
 def test_conforms_to_official_template(name, template):
     inst = SM[name]
     assert _sem(inst) == _sem(template)
@@ -130,3 +146,14 @@ def test_aid_hrefs_and_browse_paths_resolve_on_server():
 def test_every_opcua_point_is_described():
     _, props = _aid_properties()
     assert {k for k, _, _ in props} == {p.node_id for p in b.POINTS}
+
+
+def test_time_series_holds_the_real_week():
+    seg = b.find(SM["TimeSeries"], "Segments", "InternalSegmentMagdeburgWeek")
+    records = b.find(seg, "Records")["value"]
+    assert len(records) == 168 == int(b.find(seg, "RecordCount")["value"])
+    first = {e["idShort"]: e["value"] for e in records[0]["value"]}
+    assert first["Time"] == "2022-12-12T00:59:00Z"
+    assert first["TI103_PV"] == "-2.4"  # DWD 2022-12-12 00 UTC: -2.4 °C
+    outdoor = [float(next(e["value"] for e in r["value"] if e["idShort"] == "TI103_PV")) for r in records]
+    assert (min(outdoor), max(outdoor)) == (-11.4, -0.9)

@@ -52,9 +52,9 @@ def find(container: dict, *path: str) -> dict:
 
 def _clean(e: dict) -> dict:
     e = copy.deepcopy(e)
-    e["qualifiers"] = [q for q in e.get("qualifiers", []) if q.get("kind") != "TemplateQualifier"]
-    if not e["qualifiers"]:
-        del e["qualifiers"]
+    # Qualifiers in IDTA templates describe the template (cardinality, allowed idShort, select/constraint
+    # hints; some files tag them inconsistently), never the instance: drop all of them.
+    e.pop("qualifiers", None)
     e.pop("embeddedDataSpecifications", None)
     if e["modelType"] in ("SubmodelElementCollection", "SubmodelElementList"):
         e["value"] = []
@@ -238,15 +238,87 @@ def asset_interfaces() -> dict:
     return submodel(t, SM_IDS["AssetInterfacesDescription"], [interface])
 
 
+# ---------------------------------------------------------------- Time Series Data (IDTA 02008-1-1)
+TIMESERIES = _load("IDTA_02008-1-1-3_TimeSeriesData.json")
+SM_IDS["TimeSeries"] = f"{BASE}/sm/TimeSeries"
+WEEK_CSV = ROOT / "docs/week_magdeburg_2022-12.csv"
+UTC_TIME = "https://admin-shell.io/idta/TimeSeries/UtcTime/1/1"  # IDTA 02008-1-1, table 4
+# Record variables: CSV column -> (idShort, definition, unit, origin)
+TS_VARS = [
+    ("t_outdoor", "TI103_PV", "Outdoor temperature", "°C", "measured, DWD station 03126 Magdeburg"),
+    ("t_flow_set", "TIC101_SP", "Flow temperature setpoint", "°C", "twin"),
+    ("t_flow", "TIC101_PV", "Flow temperature", "°C", "twin"),
+    ("t_return", "TI102_PV", "Return temperature", "°C", "twin"),
+    ("valve_pct", "TIC101_OP", "Mixing valve position", "%", "twin"),
+]
+
+
+def _ts_var(tpl: dict, id_short: str, value) -> dict:
+    p = prop(tpl, value, id_short=id_short)
+    p["valueType"] = "xs:double"
+    p["semanticId"] = {"type": "ExternalReference", "keys": [{"type": "GlobalReference", "value": _cd_id(id_short)}]}
+    p.pop("description", None)
+    return p
+
+
+def _ts_time(tpl: dict, value: str) -> dict:
+    p = prop(tpl, value)
+    p["valueType"] = "xs:dateTime"
+    p["semanticId"] = {"type": "ExternalReference", "keys": [{"type": "GlobalReference", "value": UTC_TIME}]}
+    p.pop("description", None)
+    return p
+
+
+def time_series() -> dict:
+    import csv
+    t = TIMESERIES
+    rec_tpl = find(t, "Metadata", "Record")
+    time_tpl = find(rec_tpl, "Time")
+    var_tpl = find(rec_tpl, "sampleAccelerationX")
+    with WEEK_CSV.open() as f:
+        rows = [r for r in csv.DictReader(f) if r["time_utc"][14:16] == "59"]  # last minute of each hour
+    metadata = coll(find(t, "Metadata"), [
+        prop(find(t, "Metadata", "Name"), {"en": "Heating plant twin, Magdeburg week 12-18 Dec 2022"}),
+        prop(find(t, "Metadata", "Description"),
+             {"en": "Hourly values. TI103_PV is measured (Deutscher Wetterdienst, CC BY 4.0); all other "
+                    "values are the twin's response, recorded at minute 59 of each hour."}),
+        coll(rec_tpl, [_ts_time(time_tpl, "")] + [_ts_var(var_tpl, i, "") for _, i, _, _, _ in TS_VARS]),
+    ])
+    for e in metadata["value"][2]["value"]:
+        e.pop("value", None)  # metadata record lists the variables, without values
+    seg_tpl = find(t, "Segments", "InternalSegment")
+    rec_list = [coll(find(seg_tpl, "Records", "Record"),
+                     [_ts_time(time_tpl, r["time_utc"] + "Z")] +
+                     [_ts_var(var_tpl, i, round(float(r[c]), 3)) for c, i, _, _, _ in TS_VARS],
+                     id_short=f"Record{n:03d}") for n, r in enumerate(rows, 1)]
+    segment = coll(seg_tpl, [
+        prop(find(seg_tpl, "Name"), {"en": "Coldest week 2022, Magdeburg"}),
+        prop(find(seg_tpl, "RecordCount"), len(rows)),
+        prop(find(seg_tpl, "StartTime"), rows[0]["time_utc"] + "Z"),
+        prop(find(seg_tpl, "EndTime"), rows[-1]["time_utc"] + "Z"),
+        prop(find(seg_tpl, "SamplingInterval"), 3600),
+        prop(find(seg_tpl, "State"), "completed"),  # enumeration value, IDTA 02008-1-1
+        coll(find(seg_tpl, "Records"), rec_list),
+    ], id_short="InternalSegmentMagdeburgWeek")
+    return submodel(t, SM_IDS["TimeSeries"], [metadata, coll(find(t, "Segments"), [segment])])
+
+
+def ts_concept_descriptions() -> list:
+    return [{"id": _cd_id(i), "idShort": i, "modelType": "ConceptDescription",
+             "description": [{"language": "en", "text": f"{d}. Unit: {u}. Origin: {o}."}]}
+            for _, i, d, u, o in TS_VARS]
+
+
 # ---------------------------------------------------------------- environment
 def environment() -> dict:
-    sms = [nameplate(), technical_data(), asset_interfaces()]
+    sms = [nameplate(), technical_data(), asset_interfaces(), time_series()]
     shell = {
         "id": AAS_ID, "idShort": "HeatingPlant", "modelType": "AssetAdministrationShell",
         "assetInformation": {"assetKind": "Instance", "globalAssetId": ASSET_ID},
         "submodels": [{"type": "ModelReference", "keys": [{"type": "Submodel", "value": s["id"]}]} for s in sms],
     }
-    return {"assetAdministrationShells": [shell], "submodels": sms, "conceptDescriptions": concept_descriptions()}
+    return {"assetAdministrationShells": [shell], "submodels": sms,
+            "conceptDescriptions": concept_descriptions() + ts_concept_descriptions()}
 
 
 def write(out_dir: pathlib.Path = ROOT / "model") -> tuple[pathlib.Path, pathlib.Path]:
