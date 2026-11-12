@@ -9,6 +9,7 @@ Controller parameters: heizzentrale-tia/docs/Inbetriebnahmeprotokoll.md (TIC101:
 PDIC301: PI after fine tuning, 2 Oct 2026).
 See SOURCES.md for the tag of each constant.
 """
+import random
 from dataclasses import dataclass, field
 
 
@@ -30,24 +31,39 @@ class MixingCircuit:
     dead_time: float = 10.0       # s
     t_flow: float = 20.0          # PT1 state, starts at 20 °C like the SCL
     t_return: float = 20.0
+    # Not in the PLC model (0 = off, the 1:1 port). See HeatingPlant.realistic().
+    valve_runtime: float = 0.0    # s for 0 -> 100 %: a motorised valve moves at constant speed
+    valve_pos: float | None = None  # % actual position (follows the command at that speed)
     _buf: list = field(default_factory=list)
     _w: int = 0
 
-    def step(self, valve_pct: float, t_boiler: float, t_outdoor: float, dt: float) -> float:
+    def step(self, valve_pct: float, t_boiler: float, t_outdoor: float, dt: float,
+             flow_ratio: float = 1.0) -> float:
+        """flow_ratio = nominal flow / actual flow: the water needs that much longer through the pipe."""
         if dt <= 0 or self.time_constant <= 0:
             return self.t_flow
-        if not self._buf:
-            self._buf = [self.t_flow] * BUFFER
+        size = BUFFER if self.valve_runtime <= 0 and flow_ratio == 1.0 else 4 * BUFFER
+        if len(self._buf) != size:
+            self._buf = [self._buf[self._w - 1] if self._buf else self.t_flow] * size
+            self._w = 0
         # Load: the colder outside, the larger the spread. Return never below room temperature.
         spread = min(max(0.4 * (20.0 - t_outdoor), 2.0), 20.0)
         self.t_return = max(self.t_flow - spread, 20.0)
-        valve = min(max(valve_pct, 0.0), 100.0) / 100.0
+        command = min(max(valve_pct, 0.0), 100.0)
+        if self.valve_runtime > 0:
+            if self.valve_pos is None:
+                self.valve_pos = command
+            travel = 100.0 * dt / self.valve_runtime
+            self.valve_pos += min(max(command - self.valve_pos, -travel), travel)
+        else:
+            self.valve_pos = command
+        valve = self.valve_pos / 100.0
         t_mix = self.t_return + valve * (t_boiler - self.t_return)
         # Dead time via ring buffer
         self._buf[self._w] = t_mix
-        delay = min(max(round(self.dead_time / dt), 0), BUFFER - 1)
-        r = (self._w - delay) % BUFFER
-        self._w = (self._w + 1) % BUFFER
+        delay = min(max(round(self.dead_time * flow_ratio / dt), 0), size - 1)
+        r = (self._w - delay) % size
+        self._w = (self._w + 1) % size
         # PT1, explicit Euler
         self.t_flow += (self._buf[r] - self.t_flow) * dt / self.time_constant
         return self.t_flow
@@ -208,16 +224,35 @@ class HeatingPlant:
     t_flow_set: float = 0.0
     valve: float = 0.0
     time: float = 0.0
+    # Effects a real plant has and the PLC model does not (all off by default = 1:1 port):
+    sensor_noise: float = 0.0        # K, standard deviation of the flow temperature measurement
+    nominal_flow: float = 0.0        # m³/h at which dead_time holds; 0 = dead time independent of flow
+    t_flow_measured: float = 0.0     # what the controller sees (TIC101.PV)
+    _rng: random.Random = field(default_factory=lambda: random.Random(0))
+
+    @classmethod
+    def realistic(cls, **kw) -> "HeatingPlant":
+        """Same plant with a valve actuator that needs 90 s for full travel, a noisy temperature
+        measurement (0.05 K) and a pipe dead time that follows the network flow (10 s at 6.85 m³/h,
+        the flow at 50 % load). Values and their origin: SOURCES.md, 'Realistic mode'."""
+        p = cls(sensor_noise=0.05, nominal_flow=6.85, **kw)
+        p.circuit.valve_runtime = 90.0
+        return p
 
     def step(self) -> None:
         self.t_flow_set = heating_curve(self.t_outdoor, self.t_room_set, self.slope, self.level,
                                         self.t_flow_min, self.t_flow_max)
+        noise = self._rng.gauss(0.0, self.sensor_noise) if self.sensor_noise > 0 else 0.0
+        self.t_flow_measured = self.circuit.t_flow + noise
         if self.auto:
-            self.valve = self.pid.update(self.t_flow_set, self.circuit.t_flow, self.cycle)
+            self.valve = self.pid.update(self.t_flow_set, self.t_flow_measured, self.cycle)
         else:
             self.valve = self.manual_valve
-        self.circuit.step(self.valve, self.t_boiler, self.t_outdoor, self.cycle)
         self.pump.step(self.t_outdoor, self.cycle)
+        ratio = 1.0
+        if self.nominal_flow > 0:  # standing water (pump off) is treated as the slowest flow the buffer holds
+            ratio = self.nominal_flow / max(self.pump.network.flow, self.nominal_flow / 7.9)
+        self.circuit.step(self.valve, self.t_boiler, self.t_outdoor, self.cycle, ratio)
         self.time += self.cycle
 
     def settle(self) -> None:
@@ -226,10 +261,14 @@ class HeatingPlant:
                           self.t_flow_min, self.t_flow_max)
         v = steady_valve(self.t_outdoor, w, self.t_boiler)
         self.circuit = MixingCircuit(time_constant=self.circuit.time_constant,
-                                     dead_time=self.circuit.dead_time, t_flow=w)
+                                     dead_time=self.circuit.dead_time, t_flow=w,
+                                     valve_runtime=self.circuit.valve_runtime, valve_pos=v)
         self.circuit._buf = [w] * BUFFER
         self.pid.preset(w, w, v)
-        self.t_flow_set, self.valve = w, v
+        self.t_flow_set, self.valve, self.t_flow_measured = w, v, w
+        if self.nominal_flow > 0:  # pump loop at its operating point too, so the dead time starts right
+            for _ in range(600):
+                self.pump.step(self.t_outdoor, self.cycle)
 
     def run(self, seconds: float):
         n = round(seconds / self.cycle)

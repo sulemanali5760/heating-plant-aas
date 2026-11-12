@@ -151,11 +151,11 @@
           "value": [
             {
               "language": "en",
-              "text": "Heating plant twin, weather-compensated flow temperature control TIC101"
+              "text": "Heating plant twin, weather-compensated flow temperature control TIC101 and network pump differential pressure control PDIC301"
             },
             {
               "language": "de",
-              "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101"
+              "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101 und Netzpumpen-Differenzdruckregelung PDIC301"
             }
           ],
           "modelType": "MultiLanguageProperty"
@@ -530,11 +530,11 @@
               "value": [
                 {
                   "language": "en",
-                  "text": "Heating plant twin, weather-compensated flow temperature control TIC101"
+                  "text": "Heating plant twin, weather-compensated flow temperature control TIC101 and network pump differential pressure control PDIC301"
                 },
                 {
                   "language": "de",
-                  "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101"
+                  "text": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101 und Netzpumpen-Differenzdruckregelung PDIC301"
                 }
               ]
             },
@@ -1503,7 +1503,7 @@
               },
               "valueType": "xs:string",
               "modelType": "Property",
-              "value": "Heating plant twin (TIC101, TI102, TI103)"
+              "value": "Heating plant twin (TIC101, TI102, TI103, PDIC301)"
             },
             {
               "idShort": "EndpointMetadata",
@@ -22815,6 +22815,36 @@
           "language": "en",
           "text": "Room temperature the heating curve is designed for. Unit: °C. Source: [D] DB_Heizzentrale.tRaumSoll."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "RoomTemperatureSetpoint"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Room temperature the heating curve is designed for"
+              }
+            ],
+            "unit": "°C"
+          }
+        }
       ]
     },
     {
@@ -22825,6 +22855,35 @@
         {
           "language": "en",
           "text": "Heating-curve slope: flow temperature change per K of outdoor temperature. Unit: -. Source: [D] DB_Heizzentrale.steigung."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "Slope"
+              }
+            ],
+            "dataType": "REAL_COUNT",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Heating-curve slope: flow temperature change per K of outdoor temperature"
+              }
+            ]
+          }
         }
       ]
     },
@@ -22837,6 +22896,36 @@
           "language": "en",
           "text": "Parallel shift of the heating curve. Unit: K. Source: [D] DB_Heizzentrale.niveau."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "Level"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Parallel shift of the heating curve"
+              }
+            ],
+            "unit": "K"
+          }
+        }
       ]
     },
     {
@@ -22847,6 +22936,36 @@
         {
           "language": "en",
           "text": "Lower limit of the flow temperature setpoint. Unit: °C. Source: [D] DB_Heizzentrale.tVorlaufMin."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "FlowTemperatureMin"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Lower limit of the flow temperature setpoint"
+              }
+            ],
+            "unit": "°C"
+          }
         }
       ]
     },
@@ -22859,6 +22978,36 @@
           "language": "en",
           "text": "Upper limit of the flow temperature setpoint. Unit: °C. Source: [D] DB_Heizzentrale.tVorlaufMax."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "FlowTemperatureMax"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Upper limit of the flow temperature setpoint"
+              }
+            ],
+            "unit": "°C"
+          }
+        }
       ]
     },
     {
@@ -22869,6 +23018,36 @@
         {
           "language": "en",
           "text": "Hot-side temperature at the 3-way mixing valve. Unit: °C. Source: [D] DB_Heizzentrale.tKessel."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "BoilerTemperature"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Hot-side temperature at the 3-way mixing valve"
+              }
+            ],
+            "unit": "°C"
+          }
         }
       ]
     },
@@ -22881,6 +23060,36 @@
           "language": "en",
           "text": "Transport delay of the flow pipe. Unit: s. Source: [D] FB_StreckeVorlauf.iTotzeit."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "DeadTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Transport delay of the flow pipe"
+              }
+            ],
+            "unit": "s"
+          }
+        }
       ]
     },
     {
@@ -22891,6 +23100,36 @@
         {
           "language": "en",
           "text": "PT1 time constant of the circuit storage mass. Unit: s. Source: [D] FB_StreckeVorlauf.iZeitkonstante."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TimeConstant"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PT1 time constant of the circuit storage mass"
+              }
+            ],
+            "unit": "s"
+          }
         }
       ]
     },
@@ -22903,6 +23142,36 @@
           "language": "en",
           "text": "PID_Compact gain after fine tuning. Unit: %/K. Source: [M] commissioning test 4."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "ProportionalGain"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PID_Compact gain after fine tuning"
+              }
+            ],
+            "unit": "%/K"
+          }
+        }
       ]
     },
     {
@@ -22913,6 +23182,36 @@
         {
           "language": "en",
           "text": "PID_Compact integral time after fine tuning. Unit: s. Source: [M] commissioning test 4."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "IntegralTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PID_Compact integral time after fine tuning"
+              }
+            ],
+            "unit": "s"
+          }
         }
       ]
     },
@@ -22925,6 +23224,36 @@
           "language": "en",
           "text": "PID_Compact derivative time after fine tuning. Unit: s. Source: [M] commissioning test 4."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "DerivativeTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PID_Compact derivative time after fine tuning"
+              }
+            ],
+            "unit": "s"
+          }
+        }
       ]
     },
     {
@@ -22935,6 +23264,35 @@
         {
           "language": "en",
           "text": "Setpoint weighting b of the P part. Unit: -. Source: [M] commissioning test 4."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "ProportionalWeighting"
+              }
+            ],
+            "dataType": "REAL_COUNT",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Setpoint weighting b of the P part"
+              }
+            ]
+          }
         }
       ]
     },
@@ -22947,6 +23305,36 @@
           "language": "en",
           "text": "PID algorithm sample time. Unit: s. Source: [M] commissioning test 4."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "SampleTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PID algorithm sample time"
+              }
+            ],
+            "unit": "s"
+          }
+        }
       ]
     },
     {
@@ -22957,6 +23345,36 @@
         {
           "language": "en",
           "text": "Pump differential pressure at zero flow and 100 % speed. Unit: bar. Source: [D] FB_ModellNetz.iDpNull."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "ShutOffHead"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Pump differential pressure at zero flow and 100 % speed"
+              }
+            ],
+            "unit": "bar"
+          }
         }
       ]
     },
@@ -22969,6 +23387,36 @@
           "language": "en",
           "text": "Kv of all consumer valves fully open (flow at 1 bar). Unit: m³/h. Source: [D] FB_ModellNetz.iKvMax."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "ConsumerKvMax"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Kv of all consumer valves fully open (flow at 1 bar)"
+              }
+            ],
+            "unit": "m³/h"
+          }
+        }
       ]
     },
     {
@@ -22979,6 +23427,36 @@
         {
           "language": "en",
           "text": "Flow at 100 % speed, all valves open. Unit: m³/h. Source: [D] FB_ModellNetz design note."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "DesignFlow"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Flow at 100 % speed, all valves open"
+              }
+            ],
+            "unit": "m³/h"
+          }
         }
       ]
     },
@@ -22991,6 +23469,36 @@
           "language": "en",
           "text": "Setpoint of the network differential pressure. Unit: bar. Source: [D] DB_Netz.dpSoll."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "DifferentialPressureSetpoint"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Setpoint of the network differential pressure"
+              }
+            ],
+            "unit": "bar"
+          }
+        }
       ]
     },
     {
@@ -23001,6 +23509,36 @@
         {
           "language": "en",
           "text": "PI gain after fine tuning (PI chosen over PID: noisy dp signal). Unit: %/bar. Source: [M] commissioning 2 Oct 2026."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "ProportionalGain"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PI gain after fine tuning (PI chosen over PID: noisy dp signal)"
+              }
+            ],
+            "unit": "%/bar"
+          }
         }
       ]
     },
@@ -23013,6 +23551,36 @@
           "language": "en",
           "text": "PI integral time after fine tuning. Unit: s. Source: [M] commissioning 2 Oct 2026."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "IntegralTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PI integral time after fine tuning"
+              }
+            ],
+            "unit": "s"
+          }
+        }
       ]
     },
     {
@@ -23023,6 +23591,36 @@
         {
           "language": "en",
           "text": "Pump released below this outdoor temperature (1 K hysteresis). Unit: °C. Source: [D] FB_Netzpumpe.iHeizgrenze."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "HeatingLimit"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Pump released below this outdoor temperature (1 K hysteresis)"
+              }
+            ],
+            "unit": "°C"
+          }
         }
       ]
     },
@@ -23035,6 +23633,36 @@
           "language": "en",
           "text": "Pump always runs below this outdoor temperature. Unit: °C. Source: [D] FB_Netzpumpe.iFrostgrenze."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "FrostLimit"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Pump always runs below this outdoor temperature"
+              }
+            ],
+            "unit": "°C"
+          }
+        }
       ]
     },
     {
@@ -23045,6 +23673,35 @@
         {
           "language": "en",
           "text": "PLC the control program is commissioned on. Unit: none. Source: [D] TIA project hardware configuration."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "CPU"
+              }
+            ],
+            "dataType": "STRING",
+            "definition": [
+              {
+                "language": "en",
+                "text": "PLC the control program is commissioned on"
+              }
+            ]
+          }
         }
       ]
     },
@@ -23057,6 +23714,36 @@
           "language": "en",
           "text": "Cyclic interrupt OB30 period. Unit: s. Source: [D] OB30."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "CycleTime"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Cyclic interrupt OB30 period"
+              }
+            ],
+            "unit": "s"
+          }
+        }
       ]
     },
     {
@@ -23067,6 +23754,36 @@
         {
           "language": "en",
           "text": "Outdoor temperature. Unit: °C. Origin: measured, DWD station 03126 Magdeburg."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TI103_PV"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Outdoor temperature (measured, DWD station 03126 Magdeburg)"
+              }
+            ],
+            "unit": "°C"
+          }
         }
       ]
     },
@@ -23079,6 +23796,36 @@
           "language": "en",
           "text": "Flow temperature setpoint. Unit: °C. Origin: twin."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TIC101_SP"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Flow temperature setpoint (twin)"
+              }
+            ],
+            "unit": "°C"
+          }
+        }
       ]
     },
     {
@@ -23089,6 +23836,36 @@
         {
           "language": "en",
           "text": "Flow temperature. Unit: °C. Origin: twin."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TIC101_PV"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Flow temperature (twin)"
+              }
+            ],
+            "unit": "°C"
+          }
         }
       ]
     },
@@ -23101,6 +23878,36 @@
           "language": "en",
           "text": "Return temperature. Unit: °C. Origin: twin."
         }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TI102_PV"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Return temperature (twin)"
+              }
+            ],
+            "unit": "°C"
+          }
+        }
       ]
     },
     {
@@ -23111,6 +23918,36 @@
         {
           "language": "en",
           "text": "Mixing valve position. Unit: %. Origin: twin."
+        }
+      ],
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "modelType": "DataSpecificationIec61360",
+            "preferredName": [
+              {
+                "language": "en",
+                "text": "TIC101_OP"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "en",
+                "text": "Mixing valve position (twin)"
+              }
+            ],
+            "unit": "%"
+          }
         }
       ]
     }

@@ -35,7 +35,7 @@ async def record() -> list[str]:
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         await watch(ROOT / "model/HeatingPlant.aasx", seconds=8, endpoint_override=ENDPOINT, period=1.0,
-                    cert=cert, key=key, password=pw)
+                    cert=cert, key=key, password=pw, server_cert=pki / "server_cert.der")
     srv.cancel()
     return ["$ python -m heating_plant.aid_client model/HeatingPlant.aasx"] + buf.getvalue().splitlines()
 
@@ -56,9 +56,6 @@ def render(lines: list[str]) -> None:
 
 if __name__ == "__main__":
     out = None
-    try:
-        out = asyncio.run(record())
-    except asyncio.CancelledError:
-        pass
+    out = asyncio.run(record())
     render(out)
     print("\n".join(out))

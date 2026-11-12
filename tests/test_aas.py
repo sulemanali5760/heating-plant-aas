@@ -137,10 +137,23 @@ async def _resolve_all():
 
 
 def test_aid_hrefs_and_browse_paths_resolve_on_server():
-    try:
-        asyncio.run(_resolve_all())
-    except asyncio.CancelledError:
-        pass
+    asyncio.run(_resolve_all())
+
+
+def test_units_are_machine_readable():
+    """Every own concept description carries IEC 61360 content: a program gets the unit as a field."""
+    cds = {c["id"]: c["embeddedDataSpecifications"][0]["dataSpecificationContent"] for c in ENV["conceptDescriptions"]}
+    assert len(cds) == len(b.TECH) + len(b.TS_VARS)
+    assert cds[b._cd_id("MixingCircuit/DeadTime")]["unit"] == "s"
+    assert cds[b._cd_id("ControllerPDIC301/ProportionalGain")]["unit"] == "%/bar"
+    assert cds[b._cd_id("TIC101_PV")]["unit"] == "°C"
+    slope = cds[b._cd_id("HeatingCurve/Slope")]                          # dimensionless
+    assert "unit" not in slope and slope["dataType"] == "REAL_COUNT"
+    assert cds[b._cd_id("Controller/CPU")]["dataType"] == "STRING"
+    # each technical property points at its concept description
+    for sec in b.find(SM["TechnicalData"], "TechnicalPropertyAreas")["value"][0]["value"]:
+        for p in sec["value"]:
+            assert _sem(p) in cds, p["idShort"]
 
 
 def test_every_opcua_point_is_described():

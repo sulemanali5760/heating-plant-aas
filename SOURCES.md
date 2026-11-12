@@ -45,6 +45,40 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Step 44 → 56 °C | dead time 10 s, 56 °C after 60 s, max 56.71 °C at 72 s | [M] | 5 (trace, 1 s resolution) |
 | Manual 44 %, −12 °C | 58.67 °C, return = flow − 12.80 K | [M] | 1c, 1d |
 
+## PLCSIM trace (`data/plcsim/`, `heating_plant/plcsim.py`)
+
+| Item | Value | Tag | Source |
+|---|---|---|---|
+| Trace file | `Trace1_test5_setpoint_step_2026-09-25.csv`, 528 samples at 1 s, SHA-256 `b7e485d5be71f16aadb4e71b815c557313f18bd857fbd5c6a9e7d020477f0b0c` | [M] | Exported from the author's TIA Portal V19 project (Traces → Measurements → CSV), recorded 25 Sep 2026 15:07 UTC in PLCSIM; unchanged copy |
+| Signals | `DB_Heizzentrale.tAussen`, `tVorlaufSoll`, `tVorlaufIst`, `ventilStellung`, `tRuecklauf` | [M] | Column headers of the file |
+| Step sample | 222 (first sample with tAussen = −10) | [M] | Read from the file |
+| Step time inside the second | 0.5 s (middle) | [A] | The trace cannot resolve it; with 0 … 1 s the flow RMSE is 0.22 … 0.14 K. Not fitted. |
+| Result | flow RMSE 0.17 K, max 0.52 K, valve RMSE 2.1 % | [M] | `python scripts/plcsim_overlay.py` |
+| Meaning | checks the port and the PID_Compact rebuild; the PLCSIM plant is the same model, so it is not a check against a real plant | — | — |
+
+## Realistic mode and robustness (`HeatingPlant.realistic()`, `heating_plant/tuning.py`)
+
+| Item | Value | Tag | Source |
+|---|---|---|---|
+| Valve actuator run time | 90 s for 0 → 100 %, constant speed | [A] | Order of magnitude of motorised mixing-valve actuators; take the value from the actuator datasheet of a real plant |
+| Sensor noise | 0.05 K standard deviation, white, per 100 ms cycle | [A] | Plausible for a Pt1000 with transmitter on an analog input; measure on a real plant |
+| Dead time vs flow | dead time = 10 s · 6.85 m³/h / flow; pump off = slowest case (79 s) | [D] | Plug flow: transport time = pipe volume / flow. 6.85 m³/h is the PLCSIM flow at 50 % load (commissioning 2 Oct 2026) |
+| Linearised plant | G(s) = Kv·e^(−θs) / (τs + 1 − (1 − v)·e^(−θs)), Kv = (T_boiler − T_return)/100 | [D] | Derived from `FB_StreckeVorlauf` (return temperature = flow − spread, fed back into the mixing valve) |
+| Margin targets | gain margin ≥ 2, phase margin ≥ 45°, Ms ≤ 2 | [S] | K. J. Åström, T. Hägglund, *Advanced PID Control*, ISA, 2006; Skogestad 2003 (below) |
+| Robust PI | Kp 4 %/K, Ti 120 s, b 0.6, no D | [D] | Chosen from `tuning.sweep()`: Ms ≤ 1.3 at −12 … +10 °C, no overshoot with the 90 s actuator |
+| Finding | PLCSIM PID: gain margin 1.59 / 1.22 / 1.02 at −12 / 0 / +10 °C; sustained oscillation at +12 °C in simulation | [M] | `python -m heating_plant.tuning`, `tests/test_tuning.py`. Model result; not yet repeated in PLCSIM |
+| Input limits | Slope 0 … 3, Level ±10 K, FlowMax 25 … 75 °C, outdoor −30 … +50 °C, load 0 … 100 % | [D] | FlowMax within the PLC limits (`tVorlaufMin`, `tKessel`); outdoor = EMSR range of TI103; the others are plausibility limits |
+
+## Gateway (`heating_plant/gateway.py`)
+
+| Item | Tag | Source |
+|---|---|---|
+| Node references `nsu=<uri>;s=…`, `;i=…`, `ns=<n>;…` | [S] | OPC 10101 WoT binding 6.1; OPC 10000-6 NodeId string format |
+| `OperationalData` submodel, semantic ID `…/semantics/OperationalData/1/0` | [A] | Own definition; no IDTA template for plain live values was used. Linking AID datapoints to submodel properties is what IDTA 02027 (Asset Interfaces Mapping Configuration) standardises; not implemented |
+| Remote file: https + SHA-256, 20 MB limit | [D] | The AAS decides where credentials are sent, so it is treated like code |
+| Server certificate pinning | [S] | OPC 10000-4, 6.1: a client shall validate the server certificate; here by exact match |
+| Concept descriptions: IEC 61360 data specification | [S] | AAS Part 3a (IDTA 01003-a-3-0); IRI as checked by `aas-test-engines` 1.0.3; a number without unit is `REAL_COUNT` because `REAL_MEASURE` requires a unit (AASc-3a-009) |
+
 ## Outdoor temperature data (`data/`)
 
 | Item | Value | Tag | Source |

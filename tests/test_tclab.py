@@ -52,10 +52,7 @@ async def _served():
 
 
 def test_same_opcua_model_on_tclab_emulator():
-    try:
-        pv, op = asyncio.run(_served())
-    except asyncio.CancelledError:
-        return
+    pv, op = asyncio.run(_served())
     assert pv > 21.0          # heated above the emulator's 21 °C ambient
     assert 0.0 < op <= 100.0  # heater driven by the same TIC101 loop
 

@@ -23,8 +23,11 @@ jobs:
           python -m aas_test_engines check_file --format aasx model/HeatingPlant.aasx
       - name: Generated files are up to date
         run: |
+          python -m heating_plant.aas_builder
           python -m heating_plant.opcua_server --export-nodeset model/HeatingPlant.NodeSet2.xml
           git diff --exit-code model/HeatingPlant.aas.json model/HeatingPlant.NodeSet2.xml
+      - name: Controller robustness report (margins, noise, actuator)
+        run: python -m heating_plant.tuning
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

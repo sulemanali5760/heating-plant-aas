@@ -32,10 +32,10 @@ async def _client_cert(pki, name, trusted=True):
     return cert, key
 
 
-async def _secure_client(cert, key, password):
+async def _secure_client(cert, key, password, server_cert):
     c = Client(ENDPOINT)
     c.application_uri = security.CLIENT_URI
-    await c.set_security(SecurityPolicyBasic256Sha256, str(cert), str(key),
+    await c.set_security(SecurityPolicyBasic256Sha256, str(cert), str(key), server_certificate=str(server_cert),
                          mode=ua.MessageSecurityMode.SignAndEncrypt)
     c.set_user(security.USERNAME)
     c.set_password(password)
@@ -49,10 +49,7 @@ async def _read_pv(c: Client) -> float:
 
 
 def _run(coro):
-    try:
-        return asyncio.run(coro)
-    except asyncio.CancelledError:
-        return None
+    return asyncio.run(coro)
 
 
 def test_trusted_client_with_password_reads(tmp_path):
@@ -60,25 +57,44 @@ def test_trusted_client_with_password_reads(tmp_path):
         cert, key = await _client_cert(tmp_path, "good")
 
         async def check():
-            return await _read_pv(await _secure_client(cert, key, PASSWORD))
+            return await _read_pv(await _secure_client(cert, key, PASSWORD, tmp_path / "server_cert.der"))
         return await _with_server(tmp_path, check)
     assert _run(go()) == pytest.approx(44.0)  # 0 °C outdoor -> 44 °C (heating curve)
 
 
-@pytest.mark.parametrize("case", ["no_security", "wrong_password", "untrusted_certificate"])
+# How each refusal shows up at the client (asyncua 2.1.0). A server that cannot decrypt the request of a client
+# that encrypted for another certificate stays silent, so that case ends in the client's timeout.
+REFUSAL = {"no_security": "No matching endpoints", "wrong_password": "BadUserAccessDenied",
+           "untrusted_certificate": "BadCertificateUntrusted", "wrong_server": "TimeoutError"}
+
+
+@pytest.mark.parametrize("case", ["no_security", "wrong_password", "untrusted_certificate", "wrong_server"])
 def test_refused(tmp_path, case):
     async def go():
         cert, key = await _client_cert(tmp_path, case, trusted=case != "untrusted_certificate")
+        good_cert, good_key = await _client_cert(tmp_path, "good")
+        server_cert = tmp_path / "server_cert.der"
+        if case == "wrong_server":  # the client expects another server's certificate than the one answering
+            server_cert, _ = await security.ensure_certificate("other", security.SERVER_URI, server=True,
+                                                               pki=tmp_path / "other")
 
         async def attempt():
-            with pytest.raises(Exception):
+            try:
                 if case == "no_security":
                     c = Client(ENDPOINT)
                     c.set_user(security.USERNAME)
                     c.set_password(PASSWORD)
                 else:
-                    c = await _secure_client(cert, key, "wrong" if case == "wrong_password" else PASSWORD)
+                    c = await _secure_client(cert, key, "wrong" if case == "wrong_password" else PASSWORD,
+                                             server_cert)
                 await asyncio.wait_for(_read_pv(c), 10)
-            return "refused"
+                outcome = "accepted"
+            except Exception as e:
+                outcome = f"{type(e).__module__}.{type(e).__name__}: {e}"
+            # The refusal must come from the running server, not from a dead one: a good client still reads.
+            alive = await _read_pv(await _secure_client(good_cert, good_key, PASSWORD, tmp_path / "server_cert.der"))
+            return outcome, alive
         return await _with_server(tmp_path, attempt)
-    assert _run(go()) == "refused"
+    outcome, alive = _run(go())
+    assert alive == pytest.approx(44.0)
+    assert REFUSAL[case] in outcome, outcome

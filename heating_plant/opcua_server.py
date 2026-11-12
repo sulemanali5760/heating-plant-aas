@@ -64,6 +64,7 @@ class Point:
     low: float
     high: float
     writable: bool = False
+    kind: str = "number"   # AID/JSON type: number, integer, boolean, string
 
 
 # Ranges: EMSR list (TIC101/TI102 0..120 °C, TI103 -30..+50 °C, TV101 0..100 %, PDIC301 0..2.5 bar,
@@ -79,16 +80,30 @@ POINTS = [
     Point("PDIC301.OP", "PDIC301", "OP", "Speed setpoint of network pump P301 (SC301)", "P1", 0, 100),
 ]
 SIMULATION = [
-    # node_id, browse name, description, default: inputs that replace the real world in the twin
-    ("Simulation.OutdoorTemperature", "OutdoorTemperature", "Outdoor temperature used in manual mode (°C)", 0.0),
-    ("Simulation.ConsumerLoad", "ConsumerLoad", "Opening of all consumer valves (%), drives the pump load", 50.0),
+    # node_id, browse name, description, default, low, high: inputs that replace the real world in the twin
+    ("Simulation.OutdoorTemperature", "OutdoorTemperature", "Outdoor temperature used in manual mode (°C)", 0.0, -30.0, 50.0),
+    ("Simulation.ConsumerLoad", "ConsumerLoad", "Opening of all consumer valves (%), drives the pump load", 50.0, 0.0, 100.0),
 ]
 PARAMETERS = [
-    # node_id, browse name, description, default
-    ("HeatingCurve.Slope", "Slope", "Heating curve slope (-)", 1.2),
-    ("HeatingCurve.Level", "Level", "Heating curve parallel shift (K)", 0.0),
-    ("HeatingCurve.FlowMax", "FlowMax", "Flow temperature upper limit (°C)", 75.0),
+    # node_id, browse name, description, default, low, high
+    ("HeatingCurve.Slope", "Slope", "Heating curve slope (-)", 1.2, 0.0, 3.0),
+    ("HeatingCurve.Level", "Level", "Heating curve parallel shift (K)", 0.0, -10.0, 10.0),
+    ("HeatingCurve.FlowMax", "FlowMax", "Flow temperature upper limit (°C)", 75.0, 25.0, 75.0),
 ]
+# Accepted range of every writable input (see SOURCES.md). A write outside it, or NaN, is undone.
+LIMITS = {nid: (low, high) for nid, _, _, _, low, high in SIMULATION + PARAMETERS}
+
+
+async def _checked(n: dict, last: dict, nid: str) -> float:
+    """Value of a client-writable node, if it is a number inside LIMITS; otherwise the node is set back
+    to its last accepted value. NaN fails both comparisons, so it never reaches the controller."""
+    v = await n[nid].read_value()
+    low, high = LIMITS[nid]
+    if isinstance(v, (int, float)) and low <= v <= high:
+        last[nid] = float(v)
+    else:
+        await n[nid].write_value(last[nid])
+    return last[nid]
 
 
 async def _type_member(server: Server, owner, idx: int, type_id: str, name: str, analog: bool):
@@ -120,11 +135,11 @@ async def _build_types(server: Server, idx: int) -> dict:
         await _type_member(server, t["ControlLoopType"], idx, "ControlLoopType", m, True)
     t["SimulationInputsType"] = await base.add_object_type(ua.NodeId("SimulationInputsType", idx),
                                                            ua.QualifiedName("SimulationInputsType", idx))
-    for _, bn, _, _ in SIMULATION:
+    for _, bn, *_ in SIMULATION:
         await _type_member(server, t["SimulationInputsType"], idx, "SimulationInputsType", bn, False)
     t["HeatingCurveType"] = await base.add_object_type(ua.NodeId("HeatingCurveType", idx),
                                                        ua.QualifiedName("HeatingCurveType", idx))
-    for _, bn, _, _ in PARAMETERS:
+    for _, bn, *_ in PARAMETERS:
         await _type_member(server, t["HeatingCurveType"], idx, "HeatingCurveType", bn, False)
     t["HeatingPlantType"] = await base.add_object_type(ua.NodeId("HeatingPlantType", idx),
                                                        ua.QualifiedName("HeatingPlantType", idx))
@@ -188,7 +203,7 @@ async def build(server: Server) -> tuple[int, dict]:
     nodes = {p.node_id: await _analog_item(server, parents[p.parent], idx, p) for p in POINTS}
     hc = await plant.add_object(ua.NodeId("HeatingCurve", idx), ua.QualifiedName("HeatingCurve", idx))
     await _set_type(hc, types["HeatingCurveType"])
-    for nid, bn, desc, default in PARAMETERS:
+    for nid, bn, desc, default, *_ in PARAMETERS:
         v = await hc.add_variable(ua.NodeId(nid, idx), ua.QualifiedName(bn, idx),
                                   ua.Variant(default, ua.VariantType.Double))
         await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(desc))))
@@ -198,7 +213,7 @@ async def build(server: Server) -> tuple[int, dict]:
     await _set_type(sim, types["SimulationInputsType"])
     await sim.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(
         "Inputs that replace the real world in the twin; not plant signals"))))
-    for nid, bn, desc, default in SIMULATION:
+    for nid, bn, desc, default, *_ in SIMULATION:
         v = await sim.add_variable(ua.NodeId(nid, idx), ua.QualifiedName(bn, idx),
                                    ua.Variant(default, ua.VariantType.Double))
         await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(desc))))
@@ -237,7 +252,8 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
     outdoor="manual": the outdoor temperature comes from Simulation.OutdoorTemperature (OPC UA write).
     password=None: no security (local demo only). Otherwise Basic256Sha256 SignAndEncrypt, trusted client
     certificates only, username "operator" with this password.
-    plant_kind: "twin" (simulated mixing circuit), "tclab-emulator" or "tclab" (real rig on USB, real time).
+    plant_kind: "twin" (the 1:1 PLC model), "realistic" (valve actuator, sensor noise, flow-dependent dead
+    time, robust PI from heating_plant.tuning), "tclab-emulator" or "tclab" (real rig on USB, real time).
     TCLab: TIC101 drives heater Q1 and reads T1 with a SIMC PI from a step-test identification."""
     secure = password is not None
     server = Server(user_manager=security.PasswordUserManager(security.USERNAME, password) if secure else None)
@@ -259,6 +275,13 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
     plant = HeatingPlant(t_outdoor=hours[0] if hours else 0.0)
     if plant_kind == "twin":
         plant.settle()
+    elif plant_kind == "realistic":
+        from dataclasses import replace
+
+        from heating_plant.tuning import ROBUST
+        plant = HeatingPlant.realistic(t_outdoor=plant.t_outdoor)
+        plant.pid = replace(ROBUST)
+        plant.settle()
     else:
         from heating_plant import tclab_backend as tb
         if plant_kind == "tclab" and (tclab_pi is None or time_lapse != 1):
@@ -268,6 +291,8 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
         plant.pid = Pid2Dof(kp=kc, ti=ti, td=0.0, b=1.0, c=0.0, ts=1.0)
     await n["TI103.PV"].write_value(plant.t_outdoor)
     await n["Simulation.OutdoorTemperature"].write_value(plant.t_outdoor)
+    last = {nid: default for nid, _, _, default, *_ in SIMULATION + PARAMETERS}
+    last["Simulation.OutdoorTemperature"] = plant.t_outdoor
     async with server:
         if ready:
             ready.set()
@@ -277,16 +302,16 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
                 plant.t_outdoor = hours[int(elapsed * time_lapse / 3600) % len(hours)]
                 await n["TI103.PV"].write_value(plant.t_outdoor)
             else:
-                plant.t_outdoor = await n["Simulation.OutdoorTemperature"].read_value()
+                plant.t_outdoor = await _checked(n, last, "Simulation.OutdoorTemperature")
                 await n["TI103.PV"].write_value(plant.t_outdoor)
-            plant.pump.load = await n["Simulation.ConsumerLoad"].read_value()
-            plant.slope = await n["HeatingCurve.Slope"].read_value()
-            plant.level = await n["HeatingCurve.Level"].read_value()
-            plant.t_flow_max = await n["HeatingCurve.FlowMax"].read_value()
+            plant.pump.load = await _checked(n, last, "Simulation.ConsumerLoad")
+            plant.slope = await _checked(n, last, "HeatingCurve.Slope")
+            plant.level = await _checked(n, last, "HeatingCurve.Level")
+            plant.t_flow_max = await _checked(n, last, "HeatingCurve.FlowMax")
             # One 100 ms OB30 cycle of plant time per 100 ms of wall time, times the time-lapse factor
             for _ in range(max(1, round(time_lapse))):
                 plant.step()
-            for nid, val in [("TIC101.SP", plant.t_flow_set), ("TIC101.PV", plant.circuit.t_flow),
+            for nid, val in [("TIC101.SP", plant.t_flow_set), ("TIC101.PV", plant.t_flow_measured),
                              ("TIC101.OP", plant.valve), ("TI102.PV", plant.circuit.t_return),
                              ("PDIC301.SP", plant.pump.dp_set), ("PDIC301.PV", plant.pump.network.dp),
                              ("PDIC301.OP", plant.pump.speed_set)]:
@@ -322,7 +347,10 @@ if __name__ == "__main__":
     ap.add_argument("--time-lapse", type=float, default=60.0, help="plant seconds per wall second")
     ap.add_argument("--export-nodeset", type=pathlib.Path)
     ap.add_argument("--insecure", action="store_true", help="no encryption, no login (local demo only)")
-    ap.add_argument("--plant", choices=["twin", "tclab-emulator", "tclab"], default="twin")
+    ap.add_argument("--plant", choices=["twin", "realistic", "tclab-emulator", "tclab"], default="twin")
+    ap.add_argument("--endpoint", default=ENDPOINT,
+                    help="address to listen on; use the machine's own IP to serve other devices "
+                         "(then write the AAS with: python -m heating_plant.aas_builder --endpoint ... --out site/)")
     ap.add_argument("--tclab-pi", type=float, nargs=2, metavar=("KC", "TI"),
                     help="PI from a step test on the real rig (required with --plant tclab)")
     a = ap.parse_args()
@@ -330,6 +358,6 @@ if __name__ == "__main__":
         asyncio.run(export_nodeset(a.export_nodeset))
     else:
         pw = None if a.insecure else security.password_from_env()
-        print(f"Serving {ENDPOINT} ({'NO security' if a.insecure else 'Basic256Sha256 SignAndEncrypt, user operator'})")
-        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor, password=pw, plant_kind=a.plant,
+        print(f"Serving {a.endpoint} ({'NO security' if a.insecure else 'Basic256Sha256 SignAndEncrypt, user operator'})")
+        asyncio.run(run(time_lapse=a.time_lapse, outdoor=a.outdoor, password=pw, plant_kind=a.plant, endpoint=a.endpoint,
                         tclab_pi=tuple(a.tclab_pi) if a.tclab_pi else None))

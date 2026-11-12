@@ -67,7 +67,8 @@ class TCLabCircuit:
         self.t_return = self.lab.T2
         self.time_constant, self.dead_time = 0.0, 0.0  # not used; kept for interface parity
 
-    def step(self, valve_pct: float, t_boiler: float, t_outdoor: float, dt: float) -> float:
+    def step(self, valve_pct: float, t_boiler: float, t_outdoor: float, dt: float,
+             flow_ratio: float = 1.0) -> float:
         self.lab.Q1(min(max(valve_pct, 0.0), 100.0))
         self.t += dt
         if not self.hardware:

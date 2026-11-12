@@ -31,16 +31,14 @@ async def _live(pki):
     srv = asyncio.create_task(run(seconds=15, time_lapse=600, outdoor="dwd", endpoint=PORT_ENDPOINT, ready=ready,
                                   password=password, pki=pki))
     await asyncio.wait_for(ready.wait(), 15)
-    rows = await watch(AASX, seconds=4, endpoint_override=PORT_ENDPOINT, cert=cert, key=key, password=password)
+    rows = await watch(AASX, seconds=4, endpoint_override=PORT_ENDPOINT, cert=cert, key=key, password=password,
+                       server_cert=pki / "server_cert.der")
     srv.cancel()
     return rows
 
 
 def test_live_values_through_aid_over_secure_channel(tmp_path):
-    try:
-        rows = asyncio.run(_live(tmp_path))
-    except asyncio.CancelledError:
-        return
+    rows = asyncio.run(_live(tmp_path))
     assert rows
     last = rows[-1]
     assert -12.0 <= last["TI103.PV"] <= 0.0          # Magdeburg week 12-18 Dec 2022: -11.4 ... -0.9 °C

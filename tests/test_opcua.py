@@ -56,11 +56,37 @@ async def _scenario():
         assert 0.0 <= valve <= 100.0
         assert await node("TI103.PV").read_value() == -12.0  # indication follows the simulated weather
         assert abs(await node("PDIC301.SP").read_value() - 1.0) < 1e-9
+
+        # Writable inputs are range-checked: NaN or an impossible value is undone and never reaches the PID
+        for nid, bad, good in [("HeatingCurve.Slope", float("nan"), 1.2), ("HeatingCurve.FlowMax", 500.0, 75.0),
+                               ("Simulation.OutdoorTemperature", 999.0, -12.0), ("Simulation.ConsumerLoad", -5.0, 50.0)]:
+            await node(nid).write_value(ua.DataValue(ua.Variant(bad, ua.VariantType.Double)))
+            await asyncio.sleep(0.5)
+            assert await node(nid).read_value() == good, nid
+        assert abs(await node("TIC101.SP").read_value() - 58.4) < 1e-6
+        op = await node("TIC101.OP").read_value()
+        assert op == op and 0.0 <= op <= 100.0   # not NaN
     server.cancel()
 
 
+async def _realistic():
+    ready = asyncio.Event()
+    server = asyncio.create_task(run(seconds=20, time_lapse=600, outdoor="manual", endpoint=ENDPOINT, ready=ready,
+                                     plant_kind="realistic"))
+    await asyncio.wait_for(ready.wait(), 10)
+    async with Client(ENDPOINT) as c:
+        idx = await c.get_namespace_index(NAMESPACE)
+        await asyncio.sleep(2.0)                      # 20 plant minutes
+        pv = [await c.get_node(ua.NodeId("TIC101.PV", idx)).read_value() for _ in range(5) if not await asyncio.sleep(0.2)]
+    server.cancel()
+    return pv
+
+
+def test_realistic_plant_is_served_and_holds_setpoint():
+    pv = asyncio.run(_realistic())
+    assert all(abs(x - 44.0) < 0.5 for x in pv)     # noisy measurement around the 44 °C setpoint
+    assert len(set(pv)) > 1                          # it is a noisy signal, not a constant
+
+
 def test_opcua_model_and_control():
-    try:
-        asyncio.run(_scenario())
-    except asyncio.CancelledError:
-        pass
+    asyncio.run(_scenario())

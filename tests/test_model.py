@@ -62,3 +62,18 @@ def test_manual_valve_open_44pct_reaches_58_7():
         pass
     assert p.circuit.t_flow == pytest.approx(58.67, abs=0.3)
     assert p.circuit.t_return == pytest.approx(p.circuit.t_flow - 12.8, abs=0.01)
+
+
+def test_full_plcsim_trace_sample_by_sample():
+    """All 306 samples of the exported PLCSIM trace of test 5, not only four numbers from it.
+    Bounds are what the model reaches today (RMSE 0.17 K, max 0.53 K): PID_Compact is rebuilt from its
+    manual, so it is close, not identical; the valve differs most while the output is near its limit."""
+    from heating_plant.plcsim import compare, metrics
+    rows = compare()
+    m = metrics(rows)
+    assert m["n"] == 306
+    assert m["flow_rmse"] < 0.25
+    assert m["flow_max"] < 0.8
+    assert abs(m["model_peak"] - m["plcsim_peak"]) < 0.05
+    assert all(abs(r["model_flow"] - r["flow"]) < 0.05 for r in rows[-100:])   # same steady state
+    assert all(abs(r["model_return"] - r["return"]) < 0.8 for r in rows)

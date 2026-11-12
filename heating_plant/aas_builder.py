@@ -94,8 +94,10 @@ def submodel(tpl: dict, sm_id: str, elements: list) -> dict:
 
 
 # ---------------------------------------------------------------- Nameplate (IDTA 02006-3-0)
-DESIGNATION = {"en": "Heating plant twin, weather-compensated flow temperature control TIC101",
-               "de": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101"}
+DESIGNATION = {"en": "Heating plant twin, weather-compensated flow temperature control TIC101 and "
+                     "network pump differential pressure control PDIC301",
+               "de": "Heizzentrale-Zwilling, witterungsgeführte Vorlauftemperaturregelung TIC101 und "
+                     "Netzpumpen-Differenzdruckregelung PDIC301"}
 MANUFACTURER = {"en": "Suleman Ali (portfolio project, not a commercial product)"}
 ORDER_CODE = "not orderable (demonstrator)"
 
@@ -153,11 +155,31 @@ def _cd_id(id_short: str) -> str:
     return f"{BASE}/cd/{id_short}"
 
 
+# IRI as the IDTA test engine (aas-test-engines 1.0.3) expects it; published templates also use ".../DataSpecificationIEC61360/3/0"
+IEC61360 = "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3"
+
+
+def _iec61360(name: str, definition: str, unit: str, data_type: str) -> list:
+    """Data specification IEC 61360 (AAS Part 3a): name, definition, data type and unit as separate
+    fields a program can read, instead of a unit hidden in a description text."""
+    content = {"modelType": "DataSpecificationIec61360",
+               "preferredName": [{"language": "en", "text": name}],
+               "dataType": data_type,
+               "definition": [{"language": "en", "text": definition}]}
+    if unit and unit != "-":
+        content["unit"] = unit
+    elif data_type == "REAL_MEASURE":
+        content["dataType"] = "REAL_COUNT"  # a number without unit; REAL_MEASURE must have one (AASc-3a-009)
+    return [{"dataSpecification": {"type": "ExternalReference", "keys": [{"type": "GlobalReference", "value": IEC61360}]},
+             "dataSpecificationContent": content}]
+
+
 def concept_descriptions() -> list:
     return [{
         "id": _cd_id(f"{sec}/{i}"), "idShort": f"{sec}_{i}", "modelType": "ConceptDescription",
         "description": [{"language": "en", "text": f"{d}. Unit: {u or 'none'}. Source: {s}."}],
-    } for sec, i, _, _, u, d, s in TECH]
+        "embeddedDataSpecifications": _iec61360(i, d, u, "STRING" if vt == "xs:string" else "REAL_MEASURE"),
+    } for sec, i, vt, _, u, d, s in TECH]
 
 
 def technical_data() -> dict:
@@ -192,17 +214,19 @@ def technical_data() -> dict:
 
 
 # ---------------------------------------------------------------- Asset Interfaces Description (IDTA 02017 1.2)
-def browse_path(p) -> str:
+def browse_path(p, root: str = "HeatingPlant") -> str:
     """uav:browsePath (OPC 10101): absolute path from the Root node. Namespace index 2 is the index
     the running server assigns to NAMESPACE (checked in tests/test_aas.py)."""
-    parts = ["1:HeatingPlant"]
-    if p.parent:
-        parts.append(f"1:{p.parent}")
-    parts.append(f"1:{p.browse_name}")
-    return "/Root/Objects/" + "/".join(x.replace("1:", "2:") for x in parts)
+    parts = [root] + ([p.parent] if p.parent else []) + [p.browse_name]
+    return "/Root/Objects/" + "/".join(f"2:{x}" for x in parts)
 
 
-def asset_interfaces() -> dict:
+def asset_interfaces(endpoint: str = ENDPOINT, namespace: str = NAMESPACE, points=POINTS, secure: bool = True,
+                     sm_id: str | None = None, title: str = "Heating plant twin (TIC101, TI102, TI103, PDIC301)",
+                     root: str = "HeatingPlant") -> dict:
+    """AID submodel for ANY OPC UA server: endpoint, security and one entry per datapoint. The defaults
+    describe the heating plant; another asset passes its own endpoint, namespace and points."""
+    sm_id = sm_id or SM_IDS["AssetInterfacesDescription"]
     t = AID
     itf = find(t, "InterfaceTemplateForOPCUA")
     ep = find(t, "InterfaceTemplateForOPCUA", "EndpointMetadata")
@@ -210,13 +234,13 @@ def asset_interfaces() -> dict:
     chan_tpl, auth_tpl = find(sd, "opcua_channel_sc"), find(sd, "opcua_authentication_sc")
     # Values as defined in OPC 10101 (uav:securityMode / uav:securityPolicy / uav:userIdentityToken)
     channel = coll(chan_tpl, [prop(find(chan_tpl, "scheme"), "uav_channelsec"),
-                              prop(find(chan_tpl, "uav_securityMode"), "SignAndEncrypt"),
-                              prop(find(chan_tpl, "uav_securityPolicy"), "Basic256Sha256")])
+                              prop(find(chan_tpl, "uav_securityMode"), "SignAndEncrypt" if secure else "None"),
+                              prop(find(chan_tpl, "uav_securityPolicy"), "Basic256Sha256" if secure else "None")])
     auth = coll(auth_tpl, [prop(find(auth_tpl, "scheme"), "uav_authentication"),
-                           prop(find(auth_tpl, "uav_userIdentityToken"), "UserName")])
+                           prop(find(auth_tpl, "uav_userIdentityToken"), "UserName" if secure else "Anonymous")])
 
     def sec_ref(name: str) -> dict:
-        path = [("Submodel", SM_IDS["AssetInterfacesDescription"]), ("SubmodelElementCollection", "InterfaceOPCUA"),
+        path = [("Submodel", sm_id), ("SubmodelElementCollection", "InterfaceOPCUA"),
                 ("SubmodelElementCollection", "EndpointMetadata"),
                 ("SubmodelElementCollection", "securityDefinitions"), ("SubmodelElementCollection", name)]
         r = _clean(find(ep, "security", "[]"))
@@ -224,7 +248,7 @@ def asset_interfaces() -> dict:
         return r
 
     endpoint = coll(ep, [
-        prop(find(ep, "base"), ENDPOINT),
+        prop(find(ep, "base"), endpoint),
         prop(find(ep, "contentType"), "application/octet-stream"),
         coll(find(ep, "security"), [sec_ref("opcua_channel_sc"), sec_ref("opcua_authentication_sc")]),  # both apply
         coll(sd, [channel, auth]),
@@ -232,30 +256,26 @@ def asset_interfaces() -> dict:
     pn = find(itf, "InteractionMetadata", "properties", "property_name")
     forms_tpl = find(pn, "forms")
     props = []
-    for p in POINTS:
-        mm = prop(find(pn, "min_max"), (float(p.low), float(p.high)))
-        mm["valueType"] = "xs:float"
+    for p in points:
         forms = coll(forms_tpl, [
-            prop(find(forms_tpl, "href"), f"nsu={NAMESPACE};s={p.node_id}"),
-            prop(find(forms_tpl, "uav_browsePath"), browse_path(p)),
+            prop(find(forms_tpl, "href"), f"nsu={namespace};s={p.node_id}"),
+            prop(find(forms_tpl, "uav_browsePath"), browse_path(p, root)),
         ])
-        props.append(coll(pn, [
-            prop(find(pn, "key"), p.node_id),
-            prop(find(pn, "type"), "number"),
-            prop(find(pn, "title"), p.description),
-            prop(find(pn, "observable"), True),
-            prop(find(pn, "unit"), p.unit),
-            mm,
-            forms,
-        ], id_short=p.node_id.replace(".", "_")))
+        children = [prop(find(pn, "key"), p.node_id), prop(find(pn, "type"), p.kind),
+                    prop(find(pn, "title"), p.description), prop(find(pn, "observable"), True)]
+        if p.kind in ("number", "integer"):  # unit and range only make sense for numbers
+            mm = prop(find(pn, "min_max"), (float(p.low), float(p.high)))
+            mm["valueType"] = "xs:float"
+            children += [prop(find(pn, "unit"), p.unit), mm]
+        props.append(coll(pn, children + [forms], id_short=p.node_id.replace(".", "_")))
     interaction = coll(find(itf, "InteractionMetadata"),
                        [coll(find(itf, "InteractionMetadata", "properties"), props)])
     interface = coll(itf, [
-        prop(find(itf, "title"), "Heating plant twin (TIC101, TI102, TI103)"),
+        prop(find(itf, "title"), title),
         endpoint,
         interaction,
     ], id_short="InterfaceOPCUA")
-    return submodel(t, SM_IDS["AssetInterfacesDescription"], [interface])
+    return submodel(t, sm_id, [interface])
 
 
 # ---------------------------------------------------------------- Time Series Data (IDTA 02008-1-1)
@@ -325,38 +345,55 @@ def time_series() -> dict:
 
 def ts_concept_descriptions() -> list:
     return [{"id": _cd_id(i), "idShort": i, "modelType": "ConceptDescription",
-             "description": [{"language": "en", "text": f"{d}. Unit: {u}. Origin: {o}."}]}
+             "description": [{"language": "en", "text": f"{d}. Unit: {u}. Origin: {o}."}],
+             "embeddedDataSpecifications": _iec61360(i, f"{d} ({o})", u, "REAL_MEASURE")}
             for _, i, d, u, o in TS_VARS]
 
 
 # ---------------------------------------------------------------- environment
-def environment() -> dict:
-    sms = [nameplate(), technical_data(), asset_interfaces(), time_series()]
-    shell = {
-        "id": AAS_ID, "idShort": "HeatingPlant", "modelType": "AssetAdministrationShell",
-        "assetInformation": {"assetKind": "Instance", "globalAssetId": ASSET_ID},
+def shell(aas_id: str, asset_id: str, id_short: str, sms: list) -> dict:
+    return {
+        "id": aas_id, "idShort": id_short, "modelType": "AssetAdministrationShell",
+        "assetInformation": {"assetKind": "Instance", "globalAssetId": asset_id},
         "submodels": [{"type": "ModelReference", "keys": [{"type": "Submodel", "value": s["id"]}]} for s in sms],
     }
-    return {"assetAdministrationShells": [shell], "submodels": sms,
+
+
+def environment(endpoint: str = ENDPOINT) -> dict:
+    sms = [nameplate(), technical_data(), asset_interfaces(endpoint), time_series()]
+    return {"assetAdministrationShells": [shell(AAS_ID, ASSET_ID, "HeatingPlant", sms)], "submodels": sms,
             "conceptDescriptions": concept_descriptions() + ts_concept_descriptions()}
 
 
-def write(out_dir: pathlib.Path = ROOT / "model") -> tuple[pathlib.Path, pathlib.Path]:
+def write_env(env: dict, out_dir: pathlib.Path, name: str) -> tuple[pathlib.Path, pathlib.Path]:
+    """Write any AAS environment as <name>.aas.json and <name>.aasx."""
     from basyx.aas.adapter import aasx
     from basyx.aas.adapter.json import read_aas_json_file
 
-    out_dir.mkdir(exist_ok=True)
-    js = out_dir / "HeatingPlant.aas.json"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    js = out_dir / f"{name}.aas.json"
     # LF on every OS, so CI can check the committed file is up to date byte for byte
-    js.write_text(json.dumps(environment(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+    js.write_text(json.dumps(env, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     with js.open(encoding="utf-8") as f:
         store = read_aas_json_file(f, failsafe=False)  # strict: raises on any metamodel violation
-    ax = out_dir / "HeatingPlant.aasx"
+    ax = out_dir / f"{name}.aasx"
     with aasx.AASXWriter(str(ax)) as w:
-        w.write_aas(AAS_ID, store, aasx.DictSupplementaryFileContainer(), write_json=True)
+        w.write_aas(env["assetAdministrationShells"][0]["id"], store, aasx.DictSupplementaryFileContainer(),
+                    write_json=True)
     return js, ax
 
 
+def write(out_dir: pathlib.Path = ROOT / "model", endpoint: str = ENDPOINT) -> tuple[pathlib.Path, pathlib.Path]:
+    return write_env(environment(endpoint), out_dir, "HeatingPlant")
+
+
 if __name__ == "__main__":
-    for p in write():
-        print("wrote", p.relative_to(ROOT))
+    import argparse
+    ap = argparse.ArgumentParser(description="Write the plant's AAS (JSON + AASX)")
+    ap.add_argument("--endpoint", default=ENDPOINT,
+                    help="OPC UA endpoint the AAS should point at, e.g. opc.tcp://192.168.0.10:4840/heating-plant/")
+    ap.add_argument("--out", type=pathlib.Path, default=ROOT / "model",
+                    help="output folder (use another one than model/ for a site-specific endpoint)")
+    a = ap.parse_args()
+    for p in write(a.out, a.endpoint):
+        print("wrote", p)
