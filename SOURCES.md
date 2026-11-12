@@ -69,7 +69,7 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Finding | PLCSIM PID: gain margin 1.59 / 1.22 / 1.02 at −12 / 0 / +10 °C; sustained oscillation at +12 °C in simulation | [M] | `python -m heating_plant.tuning`, `tests/test_tuning.py`. Model result; not yet repeated in PLCSIM |
 | Input limits | Slope 0 … 3, Level ±10 K, FlowMax 25 … 75 °C, outdoor −30 … +50 °C, load 0 … 100 % | [D] | FlowMax within the PLC limits (`tVorlaufMin`, `tKessel`); outdoor = EMSR range of TI103; the others are plausibility limits |
 
-## Gateway (`heating_plant/gateway.py`)
+## Gateway (library `aidconnect`, used by `heating_plant/aid_client.py` and `heating_plant/live.py`)
 
 | Item | Tag | Source |
 |---|---|---|
@@ -99,6 +99,7 @@ Tags: **[M]** measured · **[S]** standard, datasheet or official dataset · **[
 | Units CEL (°C) = 4408652, P1 (%) = 20529 | [S] | UNECE Recommendation 20 common codes; unitId encoding OPC 10000-8, 5.6.3; namespace `http://www.opcfoundation.org/UA/units/un/cefact` |
 | Signal names TIC101, TI102, TI103, TV101, PDIC301, SC301 | [D] | `heizzentrale-tia/docs/EMSR_Stellenliste.csv` (tags per IEC 62424 style) |
 | Ranges 0…120 °C, −30…+50 °C, 0…100 %, 0…2.5 bar | [D] | EMSR list, column "Messbereich" |
+| Pump object P301: `Speed`, `Flow` (AnalogItems), `Running`, `DriveFault` (Boolean), `Simulation.DriveFault` | [D] | `FB_Netzpumpe` release logic and `FB_ModellNetz` (speed, flow). Flow is a model value: the plant has no flow meter in the EMSR list. Unit m³/h = UNECE code MQH [S] |
 | Simulation inputs in their own object (`Simulation.OutdoorTemperature`, `Simulation.ConsumerLoad`), all measurements read-only | [D] | Keeps simulated world inputs apart from plant signals |
 | href format `nsu=<namespace>;s=<id>` | [S] | OPC 10101 OPC UA for WoT Binding, 6.1 (reference.opcfoundation.org/specs/OPC-10101/6.1) |
 | Security policy Basic256Sha256, mode SignAndEncrypt, UserName token | [S] | OPC 10000-7 (profiles), OPC 10000-4 (ActivateSession, identity tokens); value names as in OPC 10101, 6.3.3 (uav:securityMode, uav:securityPolicy, uav:userIdentityToken) |

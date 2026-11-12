@@ -8,7 +8,7 @@ The same idea as a tool for any asset: the **gateway** takes one AAS file, conne
 
 ![AID client connecting with nothing but the AASX](docs/demo_aid_client.gif)
 
-*Recorded run: the client opens `HeatingPlant.aasx`, learns from the Asset Interfaces Description that the server wants Basic256Sha256 / SignAndEncrypt and a UserName login, connects and subscribes to all 8 datapoints.*
+*Recorded run: the client opens `HeatingPlant.aasx`, learns from the Asset Interfaces Description that the server wants Basic256Sha256 / SignAndEncrypt and a UserName login, connects and reads all 12 datapoints.*
 
 ![Twin on the real coldest week of 2022 in Magdeburg](docs/week_magdeburg_2022-12.png)
 
@@ -46,7 +46,7 @@ The reason is in the plant: the return water flows back into the mixing valve, s
  └──────────────────────────────┘    typed ObjectTypes, AnalogItems      │                ▼
                                                ▲                         │      AAS Part 2 REST API (BaSyx)
                                                └──── AID client ◄────────┘
-                                         reads only the AASX, applies its security, subscribes
+                                         reads only the AASX, applies its security, reads the values
 ```
 
 | Part | File | Standard |
@@ -58,7 +58,7 @@ The reason is in the plant: the return water flows back into the mixing valve, s
 | AAS REST API | `heating_plant/aas_server.py` | IDTA 01002 AAS Part 2 API v3.1 via the Eclipse BaSyx Python server (read-only repository: `/shells`, `/submodels`, element by idShort path) |
 | Hardware path | `heating_plant/tclab_backend.py` | TCLab (Arduino temperature lab): step test, two-point FOPDT identification, SIMC PI; `--plant tclab-emulator` / `--plant tclab` run the same OPC UA model on it |
 | Security | `heating_plant/security.py` | OPC UA Basic256Sha256, SignAndEncrypt, X.509 application certificates with trust list, UserName token (OPC 10000-2/-4/-7). Both sides check each other: the server only accepts trusted client certificates, the client only talks to the server certificate it was given. Written inputs are range-checked |
-| Gateway | `heating_plant/gateway.py` | AAS file → AID → OPC UA connection → submodel `OperationalData` with live values on the AAS Part 2 REST API. Remote AAS files only over https with a pinned SHA-256; reconnect with back-off; read-only towards the asset |
+| Gateway | [aidconnect](https://github.com/sulemanali5760/aidconnect) (own library, split out of this repository) | AAS file → AID → OPC UA connection → submodel `OperationalData` with live values on the AAS Part 2 REST API. Remote AAS files only over https with a pinned SHA-256; reconnect with back-off; read-only towards the asset |
 | Realistic plant | `HeatingPlant.realistic()` in `heating_plant/model.py` | Adds what the PLC model leaves out: valve actuator run time, sensor noise, dead time that follows the network flow. Off by default, so the 1:1 port stays comparable with PLCSIM |
 | Robustness | `heating_plant/tuning.py` | Gain margin, phase margin and Ms of loop TIC101 from the linearised plant; overshoot, settling time and valve travel by simulation |
 | PLCSIM trace | `heating_plant/plcsim.py`, `data/plcsim/` | Exported TIA Portal trace of commissioning test 5 (hash-pinned) and the sample-by-sample comparison |
@@ -74,7 +74,8 @@ The reason is in the plant: the return water flows back into the mixing valve, s
 | Same step, whole trace | 306 samples of the exported PLCSIM trace (`data/plcsim/`) | flow RMSE 0.17 K, max 0.52 K; valve RMSE 2.1 % |
 | Controller robustness | Linear margins, cross-checked by simulation at 0 and +12 °C | PLCSIM PID: gain margin 1.02–1.59; robust PI: > 5 |
 | Realistic plant | 90 s actuator, 0.05 K noise, flow-dependent dead time | robust PI: no overshoot, settled in 256 s; PLCSIM PID: limit cycle |
-| Gateway | Heating plant (secure) and an unrelated tank server (4 data types), from their AAS files only | live values on REST; plant switched off and on again: reconnects |
+| Gateway | Heating plant over the secured channel, from its AAS file only (an unrelated asset is tested in aidconnect) | live values on REST; plant switched off and on again: reconnects |
+| Pump status | `P301.Running`, `P301.DriveFault`, speed and flow; simulated drive fault | pump stops, fault reported, restarts when cleared; status is read-only |
 | Written inputs | NaN and out-of-range writes to curve parameters and simulation inputs | undone, controller unaffected |
 | NodeSet, independent check | Second OPC UA stack (node-opcua) loads `HeatingPlant.NodeSet2.xml` with the standard nodeset | pass, in CI |
 | OPC UA model | ObjectTypes and type definitions; OPC 10000-8: type, data type, EURange, unit namespace; read-only measurements | automated client test |
@@ -97,7 +98,7 @@ python -c "import asyncio;from heating_plant import security as s;c,_=asyncio.ru
 python -m heating_plant.opcua_server --outdoor dwd --time-lapse 600    # secure server; replays the Magdeburg week, 1 h = 6 s
 python -m heating_plant.aid_client model/HeatingPlant.aasx 30           # second terminal: connects using only the AAS
 python -m heating_plant.aas_server                                       # AAS Part 2 REST API on http://127.0.0.1:8081/api/v3.1/shells
-python -m heating_plant.gateway model/HeatingPlant.aasx                 # live values: http://127.0.0.1:8082/api/v3.1/submodels
+python -m heating_plant.live                                            # aidconnect gateway: live values on http://127.0.0.1:8082/api/v3.1/submodels
 python -m heating_plant.tuning                                          # margins and realistic-plant report
 python -m pytest                                                        # all checks
 ```
@@ -107,10 +108,10 @@ python -m pytest                                                        # all ch
 ```bash
 python -m heating_plant.opcua_server --endpoint opc.tcp://192.168.0.10:4840/heating-plant/ --plant realistic
 python -m heating_plant.aas_builder --endpoint opc.tcp://192.168.0.10:4840/heating-plant/ --out site/
-python -m heating_plant.gateway https://example.org/site/HeatingPlant.aasx --sha256 <hash> --server-cert server_cert.der
+python -m aidconnect serve https://example.org/site/HeatingPlant.aasx --sha256 <hash> --server-cert server_cert.der --username operator
 ```
 
-The gateway needs three things from the operator and nothing else: the AAS file (or its URL and hash), the server's certificate, and the password in `HEATING_PLANT_PASSWORD`. Endpoint, security mode, datapoints, types and units come from the file. It works with any AAS whose Asset Interfaces Description has an OPC UA interface with `nsu=…;s=…`, `nsu=…;i=…` or `ns=…;…` node references.
+The gateway needs three things from the operator and nothing else: the AAS file (or its URL and hash), the server's certificate, and the password (`AIDCONNECT_PASSWORD`). Endpoint, security mode, datapoints, types and units come from the file. It works with any AAS whose Asset Interfaces Description has an OPC UA interface with `nsu=…;s=…`, `nsu=…;i=…` or `ns=…;…` node references.
 
 The second line creates the client certificate and puts it into the server's trust list, the step an administrator does once. The server creates its own certificate on first start (`pki/server_cert.der`); the client and the gateway refuse a secure connection without it. Certificates live in `pki/` (git-ignored); the password is only read from the environment. `--insecure` starts a local demo without encryption or login. `--outdoor manual` lets any OPC UA client (e.g. UaExpert) change the weather through `Simulation.OutdoorTemperature`; `Simulation.ConsumerLoad` changes the pump load. `--plant tclab-emulator` runs loop TIC101 on the TCLab emulator; `--plant tclab --time-lapse 1 --tclab-pi KC TI` on a real rig (tune it with a step test first).
 

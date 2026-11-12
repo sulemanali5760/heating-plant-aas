@@ -29,6 +29,7 @@ async def _scenario():
 
         # Objects are typed with this namespace's ObjectTypes
         for obj, tname in [("HeatingPlant", "HeatingPlantType"), ("TIC101", "ControlLoopType"), ("PDIC301", "ControlLoopType"), ("Simulation", "SimulationInputsType"),
+                           ("P301", "PumpType"),
                            ("TI102", "TemperatureIndicatorType"), ("TI103", "TemperatureIndicatorType"),
                            ("HeatingCurve", "HeatingCurveType")]:
             assert await node(obj).read_type_definition() == ua.NodeId(tname, idx), obj
@@ -56,6 +57,24 @@ async def _scenario():
         assert 0.0 <= valve <= 100.0
         assert await node("TI103.PV").read_value() == -12.0  # indication follows the simulated weather
         assert abs(await node("PDIC301.SP").read_value() - 1.0) < 1e-9
+
+        # Pump status: running at -12 °C; a drive fault stops it and is reported, clearing it restarts the pump
+        assert await node("P301.Running").read_value() is True
+        assert await node("P301.Flow").read_value() > 0.0
+        await node("Simulation.DriveFault").write_value(ua.DataValue(ua.Variant(True, ua.VariantType.Boolean)))
+        await asyncio.sleep(1.0)
+        assert await node("P301.DriveFault").read_value() is True
+        assert await node("P301.Running").read_value() is False
+        assert await node("PDIC301.OP").read_value() == 0.0
+        await node("Simulation.DriveFault").write_value(ua.DataValue(ua.Variant(False, ua.VariantType.Boolean)))
+        await asyncio.sleep(1.0)
+        assert await node("P301.Running").read_value() is True
+        for ro in ("P301.Running", "P301.DriveFault"):
+            try:
+                await node(ro).write_value(ua.DataValue(ua.Variant(True, ua.VariantType.Boolean)))
+                raise AssertionError(f"{ro} must be read-only")
+            except ua.UaStatusCodeError:
+                pass
 
         # Writable inputs are range-checked: NaN or an impossible value is undone and never reaches the PID
         for nid, bad, good in [("HeatingCurve.Slope", float("nan"), 1.2), ("HeatingCurve.FlowMax", 500.0, 75.0),

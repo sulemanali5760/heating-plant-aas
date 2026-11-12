@@ -41,11 +41,11 @@ async def record() -> list[str]:
 
 
 def render(lines: list[str]) -> None:
-    fig = plt.figure(figsize=(12, 3.6), dpi=90)
+    fig = plt.figure(figsize=(19, 3.6), dpi=90)
     fig.patch.set_facecolor("#1e1e1e")
     ax = fig.add_axes((0, 0, 1, 1))
     ax.axis("off")
-    text = ax.text(0.01, 0.97, "", va="top", ha="left", family="monospace", fontsize=8.2, color="#d4d4d4")
+    text = ax.text(0.01, 0.97, "", va="top", ha="left", family="monospace", fontsize=7.4, color="#d4d4d4")
 
     def frame(i):
         text.set_text("\n".join(lines[: i + 1]))

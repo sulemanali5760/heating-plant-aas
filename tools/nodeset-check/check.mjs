@@ -16,7 +16,7 @@ const ns = as.getNamespaceIndex(NS);
 const fail = (m) => { console.error("FAIL:", m); process.exitCode = 1; };
 const node = (s) => as.findNode(`ns=${ns};s=${s}`);
 
-const expectType = { HeatingPlant: "HeatingPlantType", TIC101: "ControlLoopType", PDIC301: "ControlLoopType", Simulation: "SimulationInputsType",
+const expectType = { HeatingPlant: "HeatingPlantType", TIC101: "ControlLoopType", PDIC301: "ControlLoopType", Simulation: "SimulationInputsType", P301: "PumpType",
   TI102: "TemperatureIndicatorType", TI103: "TemperatureIndicatorType", HeatingCurve: "HeatingCurveType" };
 for (const [obj, type] of Object.entries(expectType)) {
   const n = node(obj);
@@ -24,7 +24,7 @@ for (const [obj, type] of Object.entries(expectType)) {
   if (n.typeDefinitionObj?.browseName.name !== type) fail(`${obj} has type ${n.typeDefinitionObj?.browseName.name}`);
 }
 const analog = as.findVariableType("AnalogItemType");
-for (const id of ["TIC101.SP", "TIC101.PV", "TIC101.OP", "TI102.PV", "TI103.PV", "PDIC301.SP", "PDIC301.PV", "PDIC301.OP"]) {
+for (const id of ["TIC101.SP", "TIC101.PV", "TIC101.OP", "TI102.PV", "TI103.PV", "PDIC301.SP", "PDIC301.PV", "PDIC301.OP", "P301.Speed", "P301.Flow"]) {
   const v = node(id);
   if (!v) { fail(`${id} missing`); continue; }
   if (!v.typeDefinitionObj.isSubtypeOf(analog) && v.typeDefinitionObj !== analog) fail(`${id} not AnalogItemType`);
@@ -37,5 +37,10 @@ for (const m of ["SP", "PV", "OP"]) {
   if (!c) fail(`ControlLoopType.${m} missing`);
   else if (c.modellingRule !== "Mandatory") fail(`ControlLoopType.${m} rule ${c.modellingRule}`);
 }
-if (!process.exitCode) console.log(`node-opcua: NodeSet OK (namespace index ${ns}, ${Object.keys(expectType).length} typed objects, 8 AnalogItems)`);
+for (const id of ["P301.Running", "P301.DriveFault", "Simulation.DriveFault"]) {
+  const v = node(id);
+  if (!v) fail(`${id} missing`);
+  else if (v.dataType.toString() !== "ns=0;i=1") fail(`${id} data type ${v.dataType.toString()} (expected Boolean)`);
+}
+if (!process.exitCode) console.log(`node-opcua: NodeSet OK (namespace index ${ns}, ${Object.keys(expectType).length} typed objects, 10 AnalogItems, 3 Booleans)`);
 as.dispose();

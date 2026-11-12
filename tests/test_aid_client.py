@@ -5,21 +5,24 @@ import pathlib
 import secrets
 
 from heating_plant import security
-from heating_plant.aid_client import read_interface, read_interface_with_security, watch
-from heating_plant.opcua_server import POINTS, run
+import aidconnect
+
+from heating_plant.aid_client import watch
+from heating_plant.opcua_server import ALL_POINTS, run
 
 AASX = pathlib.Path(__file__).resolve().parents[1] / "model/HeatingPlant.aasx"
 PORT_ENDPOINT = "opc.tcp://127.0.0.1:48403/heating-plant/"
 
 
 def test_interface_read_from_aasx_only():
-    base, points = read_interface(AASX)
-    assert base.startswith("opc.tcp://")
-    assert {p.name for p in points} == {p.node_id for p in POINTS}
+    itf = aidconnect.read_interface(AASX)
+    assert itf.endpoint.startswith("opc.tcp://")
+    assert {p.name for p in itf.points} == {p.node_id for p in ALL_POINTS}
+    assert {p.name: p.kind for p in itf.points}["P301.Running"] == "boolean"
 
 
 def test_security_read_from_aasx():
-    _, _, sec = read_interface_with_security(AASX)
+    sec = aidconnect.read_interface(AASX).security
     assert (sec.mode, sec.policy, sec.user_token) == ("SignAndEncrypt", "Basic256Sha256", "UserName")
 
 
@@ -45,3 +48,5 @@ def test_live_values_through_aid_over_secure_channel(tmp_path):
     assert 25.0 <= last["TIC101.SP"] <= 75.0          # heating curve limits
     assert 0.0 <= last["TIC101.OP"] <= 100.0
     assert last["TI102.PV"] <= last["TIC101.PV"]      # return colder than flow
+    assert last["P301.Running"] is True and last["P301.DriveFault"] is False
+    assert last["P301.Flow"] > 0.0

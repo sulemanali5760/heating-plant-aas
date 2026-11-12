@@ -47,6 +47,8 @@ UNITS = {
                             Description=ua.LocalizedText("degree Celsius")),
     "BAR": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("BAR"),
                             DisplayName=ua.LocalizedText("bar"), Description=ua.LocalizedText("bar")),
+    "MQH": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("MQH"),
+                            DisplayName=ua.LocalizedText("m³/h"), Description=ua.LocalizedText("cubic metre per hour")),
     "P1": ua.EUInformation(NamespaceUri=UNECE_NS, UnitId=unece_unit_id("P1"),
                            DisplayName=ua.LocalizedText("%"),
                            Description=ua.LocalizedText("percent")),
@@ -78,7 +80,15 @@ POINTS = [
     Point("PDIC301.SP", "PDIC301", "SP", "Network differential pressure setpoint", "BAR", 0, 2.5),
     Point("PDIC301.PV", "PDIC301", "PV", "Network differential pressure at the consumers (PDT301)", "BAR", 0, 2.5),
     Point("PDIC301.OP", "PDIC301", "OP", "Speed setpoint of network pump P301 (SC301)", "P1", 0, 100),
+    Point("P301.Speed", "P301", "Speed", "Actual speed of network pump P301", "P1", 0, 100),
+    Point("P301.Flow", "P301", "Flow", "Network flow (value of the plant model; the plant has no flow meter)", "MQH", 0, 20),
 ]
+# Binary status of the pump: without it a client sees speed 0 and cannot tell why.
+STATUS = [
+    Point("P301.Running", "P301", "Running", "Network pump P301 released and running", "", 0, 1, kind="boolean"),
+    Point("P301.DriveFault", "P301", "DriveFault", "Drive fault of P301 (frequency converter)", "", 0, 1, kind="boolean"),
+]
+ALL_POINTS = POINTS + STATUS     # everything the AAS describes
 SIMULATION = [
     # node_id, browse name, description, default, low, high: inputs that replace the real world in the twin
     ("Simulation.OutdoorTemperature", "OutdoorTemperature", "Outdoor temperature used in manual mode (°C)", 0.0, -30.0, 50.0),
@@ -106,7 +116,7 @@ async def _checked(n: dict, last: dict, nid: str) -> float:
     return last[nid]
 
 
-async def _type_member(server: Server, owner, idx: int, type_id: str, name: str, analog: bool):
+async def _type_member(server: Server, owner, idx: int, type_id: str, name: str, analog: bool, boolean: bool = False):
     """Mandatory child of an ObjectType (ModellingRule Mandatory, OPC 10000-3, 6.4.4)."""
     if analog:
         analog_type = server.get_node(ua.NodeId(ua.ObjectIds.AnalogItemType))
@@ -117,7 +127,8 @@ async def _type_member(server: Server, owner, idx: int, type_id: str, name: str,
         await v.write_attribute(ua.AttributeIds.ValueRank, ua.DataValue(ua.Variant(-1, ua.VariantType.Int32)))
     else:
         v = await owner.add_variable(ua.NodeId(f"{type_id}.{name}", idx), ua.QualifiedName(name, idx),
-                                     ua.Variant(0.0, ua.VariantType.Double))
+                                     ua.Variant(False, ua.VariantType.Boolean) if boolean
+                                     else ua.Variant(0.0, ua.VariantType.Double))
     await v.set_modelling_rule(True)
     return v
 
@@ -137,6 +148,12 @@ async def _build_types(server: Server, idx: int) -> dict:
                                                            ua.QualifiedName("SimulationInputsType", idx))
     for _, bn, *_ in SIMULATION:
         await _type_member(server, t["SimulationInputsType"], idx, "SimulationInputsType", bn, False)
+    await _type_member(server, t["SimulationInputsType"], idx, "SimulationInputsType", "DriveFault", False, boolean=True)
+    t["PumpType"] = await base.add_object_type(ua.NodeId("PumpType", idx), ua.QualifiedName("PumpType", idx))
+    for m in ("Speed", "Flow"):
+        await _type_member(server, t["PumpType"], idx, "PumpType", m, True)
+    for m in ("Running", "DriveFault"):
+        await _type_member(server, t["PumpType"], idx, "PumpType", m, False, boolean=True)
     t["HeatingCurveType"] = await base.add_object_type(ua.NodeId("HeatingCurveType", idx),
                                                        ua.QualifiedName("HeatingCurveType", idx))
     for _, bn, *_ in PARAMETERS:
@@ -145,6 +162,7 @@ async def _build_types(server: Server, idx: int) -> dict:
                                                        ua.QualifiedName("HeatingPlantType", idx))
     for name, tname in [("TIC101", "ControlLoopType"), ("TI102", "TemperatureIndicatorType"),
                         ("TI103", "TemperatureIndicatorType"), ("PDIC301", "ControlLoopType"),
+                        ("P301", "PumpType"),
                         ("HeatingCurve", "HeatingCurveType"), ("Simulation", "SimulationInputsType")]:
         o = await t["HeatingPlantType"].add_object(ua.NodeId(f"HeatingPlantType.{name}", idx),
                                                    ua.QualifiedName(name, idx))
@@ -195,12 +213,18 @@ async def build(server: Server) -> tuple[int, dict]:
             ("TIC101", "ControlLoopType", "Flow temperature control loop (heating curve -> PID -> mixing valve)"),
             ("TI102", "TemperatureIndicatorType", "Return temperature indication"),
             ("TI103", "TemperatureIndicatorType", "Outdoor temperature indication"),
-            ("PDIC301", "ControlLoopType", "Network differential pressure loop (PI -> pump speed P301)")]:
+            ("PDIC301", "ControlLoopType", "Network differential pressure loop (PI -> pump speed P301)"),
+            ("P301", "PumpType", "Network pump with frequency converter")]:
         o = await plant.add_object(ua.NodeId(tag, idx), ua.QualifiedName(tag, idx))
         await _set_type(o, types[type_name])
         await o.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(text))))
         parents[tag] = o
     nodes = {p.node_id: await _analog_item(server, parents[p.parent], idx, p) for p in POINTS}
+    for p in STATUS:
+        v = await parents[p.parent].add_variable(ua.NodeId(p.node_id, idx), ua.QualifiedName(p.browse_name, idx),
+                                                 ua.Variant(False, ua.VariantType.Boolean))
+        await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(p.description))))
+        nodes[p.node_id] = v
     hc = await plant.add_object(ua.NodeId("HeatingCurve", idx), ua.QualifiedName("HeatingCurve", idx))
     await _set_type(hc, types["HeatingCurveType"])
     for nid, bn, desc, default, *_ in PARAMETERS:
@@ -219,6 +243,12 @@ async def build(server: Server) -> tuple[int, dict]:
         await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(desc))))
         await v.set_writable()
         nodes[nid] = v
+    v = await sim.add_variable(ua.NodeId("Simulation.DriveFault", idx), ua.QualifiedName("DriveFault", idx),
+                               ua.Variant(False, ua.VariantType.Boolean))
+    await v.write_attribute(ua.AttributeIds.Description, ua.DataValue(ua.Variant(ua.LocalizedText(
+        "Simulated drive fault of P301 (true = fault): the pump must stop"))))
+    await v.set_writable()
+    nodes["Simulation.DriveFault"] = v
     nodes["_plant"] = plant
     return idx, nodes
 
@@ -305,6 +335,7 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
                 plant.t_outdoor = await _checked(n, last, "Simulation.OutdoorTemperature")
                 await n["TI103.PV"].write_value(plant.t_outdoor)
             plant.pump.load = await _checked(n, last, "Simulation.ConsumerLoad")
+            plant.pump.drive_ok = (await n["Simulation.DriveFault"].read_value()) is not True
             plant.slope = await _checked(n, last, "HeatingCurve.Slope")
             plant.level = await _checked(n, last, "HeatingCurve.Level")
             plant.t_flow_max = await _checked(n, last, "HeatingCurve.FlowMax")
@@ -314,8 +345,11 @@ async def run(seconds: float | None = None, time_lapse: float = 60.0, outdoor: s
             for nid, val in [("TIC101.SP", plant.t_flow_set), ("TIC101.PV", plant.t_flow_measured),
                              ("TIC101.OP", plant.valve), ("TI102.PV", plant.circuit.t_return),
                              ("PDIC301.SP", plant.pump.dp_set), ("PDIC301.PV", plant.pump.network.dp),
-                             ("PDIC301.OP", plant.pump.speed_set)]:
+                             ("PDIC301.OP", plant.pump.speed_set), ("P301.Speed", plant.pump.network.speed),
+                             ("P301.Flow", plant.pump.network.flow)]:
                 await n[nid].write_value(float(val))
+            await n["P301.Running"].write_value(plant.pump.pump_on)
+            await n["P301.DriveFault"].write_value(not plant.pump.drive_ok)
             await asyncio.sleep(0.1)
             elapsed += 0.1
 
@@ -326,7 +360,7 @@ async def export_nodeset(path: pathlib.Path) -> None:
     idx, n = await build(server)
     plant = n["_plant"]
     type_roots = [server.get_node(ua.NodeId(t, idx)) for t in
-                  ("TemperatureIndicatorType", "ControlLoopType", "HeatingCurveType", "SimulationInputsType",
+                  ("TemperatureIndicatorType", "ControlLoopType", "HeatingCurveType", "SimulationInputsType", "PumpType",
                    "HeatingPlantType")]
     nodes = type_roots + [plant] + await plant.get_children()
     queue = list(nodes)

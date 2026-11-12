@@ -11,7 +11,7 @@ import json
 import pathlib
 
 from heating_plant.model import Pid2Dof
-from heating_plant.opcua_server import ENDPOINT, NAMESPACE, POINTS
+from heating_plant.opcua_server import ALL_POINTS, ENDPOINT, NAMESPACE
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 IDTA = ROOT / "standards/idta"
@@ -221,8 +221,8 @@ def browse_path(p, root: str = "HeatingPlant") -> str:
     return "/Root/Objects/" + "/".join(f"2:{x}" for x in parts)
 
 
-def asset_interfaces(endpoint: str = ENDPOINT, namespace: str = NAMESPACE, points=POINTS, secure: bool = True,
-                     sm_id: str | None = None, title: str = "Heating plant twin (TIC101, TI102, TI103, PDIC301)",
+def asset_interfaces(endpoint: str = ENDPOINT, namespace: str = NAMESPACE, points=ALL_POINTS, secure: bool = True,
+                     sm_id: str | None = None, title: str = "Heating plant twin (TIC101, TI102, TI103, PDIC301, P301)",
                      root: str = "HeatingPlant") -> dict:
     """AID submodel for ANY OPC UA server: endpoint, security and one entry per datapoint. The defaults
     describe the heating plant; another asset passes its own endpoint, namespace and points."""

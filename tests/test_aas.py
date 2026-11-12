@@ -158,7 +158,7 @@ def test_units_are_machine_readable():
 
 def test_every_opcua_point_is_described():
     _, props = _aid_properties()
-    assert {k for k, _, _ in props} == {p.node_id for p in b.POINTS}
+    assert {k for k, _, _ in props} == {p.node_id for p in b.ALL_POINTS} and len(props) == 12
 
 
 def test_time_series_holds_the_real_week():

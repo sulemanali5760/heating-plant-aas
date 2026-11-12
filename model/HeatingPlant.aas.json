@@ -1503,7 +1503,7 @@
               },
               "valueType": "xs:string",
               "modelType": "Property",
-              "value": "Heating plant twin (TIC101, TI102, TI103, PDIC301)"
+              "value": "Heating plant twin (TIC101, TI102, TI103, PDIC301, P301)"
             },
             {
               "idShort": "EndpointMetadata",
@@ -3798,6 +3798,868 @@
                               "valueType": "xs:string",
                               "modelType": "Property",
                               "value": "/Root/Objects/2:HeatingPlant/2:PDIC301/2:OP"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "P301_Speed",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P301.Speed"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Actual speed of network pump P301"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P1"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "100.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=P301.Speed"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:P301/2:Speed"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "P301_Flow",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P301.Flow"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "number",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Network flow (value of the plant model; the plant has no flow meter)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "unit",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides information about the datapoint’s unit."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://schema.org/unitCode"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "MQH"
+                        },
+                        {
+                          "idShort": "min_max",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Specifies a minimum and/or maximum numeric value for the datapoint. This term is only used when type element is number or integer. When it is number, the range data type has to be float and when it is integer, the range data type has to be integer "
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/minMaxRange"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#minimum"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/json-schema#maximum"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:float",
+                          "modelType": "Range",
+                          "min": "0.0",
+                          "max": "20.0"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=P301.Flow"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:P301/2:Flow"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "P301_Running",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P301.Running"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "boolean",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Network pump P301 released and running"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=P301.Running"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:P301/2:Running"
+                            }
+                          ],
+                          "modelType": "SubmodelElementCollection"
+                        }
+                      ],
+                      "modelType": "SubmodelElementCollection"
+                    },
+                    {
+                      "idShort": "P301_DriveFault",
+                      "description": [
+                        {
+                          "language": "en",
+                          "text": "Defines an interaction property that covers usually a datapoint definition that can be read or subscribed to.  "
+                        }
+                      ],
+                      "semanticId": {
+                        "type": "ExternalReference",
+                        "keys": [
+                          {
+                            "type": "GlobalReference",
+                            "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/PropertyDefinition"
+                          }
+                        ]
+                      },
+                      "supplementalSemanticIds": [
+                        {
+                          "type": "ExternalReference",
+                          "keys": [
+                            {
+                              "type": "GlobalReference",
+                              "value": "https://www.w3.org/2019/wot/td#name"
+                            }
+                          ]
+                        }
+                      ],
+                      "value": [
+                        {
+                          "idShort": "key",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Optional element when the idShort of {property_name} cannot be used to reflect the desired property name due to the idShort restrictions (e.g., payload message uses “temperature-value” as key term)."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://admin-shell.io/idta/AssetInterfacesDescription/1/0/key"
+                              }
+                            ]
+                          },
+                          "supplementalSemanticIds": [
+                            {
+                              "type": "ExternalReference",
+                              "keys": [
+                                {
+                                  "type": "GlobalReference",
+                                  "value": "https://www.w3.org/2019/wot/td#name"
+                                }
+                              ]
+                            }
+                          ],
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "P301.DriveFault"
+                        },
+                        {
+                          "idShort": "type",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Indicates the abstract data type (one of object, array, string, number, integer, boolean, or null) of the described datapoint"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "value": "boolean",
+                          "modelType": "Property"
+                        },
+                        {
+                          "idShort": "title",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "Provides a human-readable title of this interaction (e.g., display a text for UI representation)"
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#title"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:string",
+                          "modelType": "Property",
+                          "value": "Drive fault of P301 (frequency converter)"
+                        },
+                        {
+                          "idShort": "observable",
+                          "description": [
+                            {
+                              "language": "en",
+                              "text": "An indicator that tells that the interaction datapoint can be observed with a, e.g., subscription mechanism by an underlying protocol."
+                            }
+                          ],
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#isObservable"
+                              }
+                            ]
+                          },
+                          "valueType": "xs:boolean",
+                          "modelType": "Property",
+                          "value": "true"
+                        },
+                        {
+                          "idShort": "forms",
+                          "semanticId": {
+                            "type": "ExternalReference",
+                            "keys": [
+                              {
+                                "type": "GlobalReference",
+                                "value": "https://www.w3.org/2019/wot/td#hasForm"
+                              }
+                            ]
+                          },
+                          "value": [
+                            {
+                              "idShort": "href",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Target IRI relative path or full IRI of asset’s datapoint. The relative endpoint definition in href is always relative to base defined in EndpointMetadata"
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "https://www.w3.org/2019/wot/hypermedia#hasTarget"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "nsu=https://github.com/sulemanali5760/heating-plant-aas/UA/;s=P301.DriveFault"
+                            },
+                            {
+                              "idShort": "uav_browsePath",
+                              "description": [
+                                {
+                                  "language": "en",
+                                  "text": "Defines an absolute path of a datapoint, starting from the root node of an OPC UA address space. This term is only used for OPC UA interface. "
+                                }
+                              ],
+                              "semanticId": {
+                                "type": "ExternalReference",
+                                "keys": [
+                                  {
+                                    "type": "GlobalReference",
+                                    "value": "http://opcfoundation.org/UA/WoT-Binding/browsePath"
+                                  }
+                                ]
+                              },
+                              "valueType": "xs:string",
+                              "modelType": "Property",
+                              "value": "/Root/Objects/2:HeatingPlant/2:P301/2:DriveFault"
                             }
                           ],
                           "modelType": "SubmodelElementCollection"
