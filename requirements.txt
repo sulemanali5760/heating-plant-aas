@@ -3,8 +3,8 @@ basyx-python-sdk==2.2.0
 # Eclipse BaSyx AAS Part 2 server, release 2.2.0 commit (not published on PyPI)
 basyx-python-server @ git+https://github.com/eclipse-basyx/basyx-python-sdk@a846219d8de7145a144fa832de926c452bab2f17#subdirectory=server
 Werkzeug==3.1.9
-# AAS-driven OPC UA connection and gateway (split out of this repository), pinned to v0.1.0
-aidconnect @ git+https://github.com/sulemanali5760/aidconnect@8c04d66b97e24470969f87ded48038ce58119cd0
+# AAS-driven OPC UA connection and gateway (split out of this repository)
+aidconnect==0.1.1
 aas-test-engines==1.0.3
 matplotlib==3.11.2
 tclab==1.0.0
